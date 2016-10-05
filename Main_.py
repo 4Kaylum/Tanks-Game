@@ -8,14 +8,14 @@ import json
 class Window:
 
     # To be called when the class is created
-    def __init__(self, dimensions=[1280, 720], title="Blank", players=[0, 0]):
+    def __init__(self, *, dimensions=[1152, 647], title="Blank", players=[0, 0]):
         # Init the Pygame module
         pygame.init()
         self.clock = pygame.time.Clock()
         # Create the window itself
         self.window = pygame.display.set_mode(dimensions)
         pygame.display.set_caption(title)
-        self.window.fill([255,255,255])
+        self.window.fill([255, 255, 255])
         # Create the array of drawn walls
         self.levelWalls = []
         # Store the players within the class
@@ -65,7 +65,7 @@ class Wall(pygame.sprite.Sprite):
 
     # To be called when the class is created
     # Will be created at the beginning of each level
-    def __init__(self, topLeft=[0, 0], dimensions=[0, 0], colour=[255, 255, 255]):
+    def __init__(self, *, topLeft=[0, 0], dimensions=[0, 0], colour=[255, 255, 255]):
         """Build a great wall... and make the class pay for it!"""
         super().__init__()
 
@@ -85,7 +85,7 @@ class Wall(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
 
     # Defines everything about the player
-    def __init__(self, settingsJSON='', playerNumber=0):
+    def __init__(self, *, settingsJSON='', playerNumber=0):
         # Read settings from the JSON
         with open(settingsJSON) as a:
             settings = json.load(a)
@@ -101,18 +101,24 @@ class Player(pygame.sprite.Sprite):
     def setLocation(self, map):
         pass
 
+    # Check if the player clicked quit
+    def checkQuit(self):
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+                return False
+        return True
+
 # Main running code
 # This will be all of the "game" stuff
 if __name__ == '__main__':
     # Create the window
     window = Window()
     # Run the game while the quit button hasn't been pressed
-    tick = True
     while window.checkQuit():
         if tick:
             tick = not tick
-            window.makeWalls(
-                'C:\\Users\\Lab\\Dropbox\\CodeMk2\\Visual Studio\\TanksMk3\\TanksMk3\\bin\\Debug\\Data\\Levels\\levelOne.json')
+            window.makeWalls('Data/Levels/levelOne.json')
         window.drawAll()
 
     # Out of the loop; kill the program
