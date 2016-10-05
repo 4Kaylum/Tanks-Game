@@ -77,6 +77,8 @@ class Wall(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         # Store its top left
         self.topLeft = topLeft
+        self.rect.x = self.topLeft[0]
+        self.rect.y = self.topLeft[1]
 
 
 # Create the player class
