@@ -17,6 +17,7 @@ class Window:
         self.window = pygame.display.set_mode(dimensions)
         pygame.display.set_caption(title)
         self.window.fill([255, 255, 255])
+        self.background = Wall(dimensions=dimensions)
 
         # Create the array of drawn walls
         self.levelWalls = []
@@ -67,6 +68,7 @@ class Window:
 
     # Draw all sprites to screen
     def drawAll(self):
+        self.window.blit(self.background.image,[0,0])
         self.wallGroup.draw(self.window)
         self.bulletGroup.draw(self.window)
         self.playerGroup.draw(self.window)
@@ -108,11 +110,12 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
         # Read buttons from the settings
-        self.buttons = []
+        self.buttons = {}
 
-        # Create X and Y coords, don't set: to be set by level
-        self.X = None
-        self.Y = None
+        # Set change variables - these will be checked before moving the player to make sure
+        # that there are no collisions
+        self.X_c = 0
+        self.Y_c = 0
 
         # Store playerNumber so it doesn't need to be read again later
         self.playerNumber = playerNumber
@@ -131,9 +134,9 @@ class Player(pygame.sprite.Sprite):
 
     # Load the settings from the file
     def readSettings(self, jsonFile):
-        with open(settingsJSON) as a:
+        with open(jsonFile) as a:
             settings = json.load(a)
-        self.buttons = settings['Player{}'.format(playerNumber)]
+        self.buttons = settings['Player{}'.format(self.playerNumber)]
 
     # Check if the player clicked quit
     def checkQuit(self):
@@ -148,19 +151,41 @@ class Player(pygame.sprite.Sprite):
         # self.
         pass
 
+    # Check the assigned buttons to see if there's any keypresses
+    def checkKeypress(self):
+        x = pygame.key.get_pressed()
+
+        ## Change rotation value based on LR values
+        if x[self.buttons['right']]:
+            self.rect.x += 3 # Subject to change
+        if x[self.buttons['left']]:
+            self.rect.x -= 3 # Subject to change
+
+        ## Change XY values based on UD values
+        if x[self.buttons['up']]:
+            self.rect.y -= 3 # Subject to change
+        if x[self.buttons['down']]:
+            self.rect.y += 3 # Subject to change
+
+
 # Main running code
 # This will be all of the "game" stuff
 if __name__ == '__main__':
     # Create the window
     window = Window()
+    # window.playerOne.readSettings('Data/settings.json')
+    window.playerOne.setLocation([100, 100])
+    window.playerOne.buttons = {'up':pygame.K_UP,'left':pygame.K_LEFT,'down':pygame.K_DOWN,'right':pygame.K_RIGHT,'fire':pygame.K_KP0}
+    window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
     tick = True
 
     # Run the game while the quit button hasn't been pressed
     while window.checkQuit():
         if tick:
             tick = not tick
-            window.makeWalls('Data/Levels/blankLevel.json')
-        window.playerOne.setLocation([100, 100])
+            window.makeWalls('Data/Levels/levelOne.json')
+        window.playerOne.checkKeypress()
+        window.playerTwo.checkKeypress()
         window.drawAll()
 
     # Out of the loop; kill the program

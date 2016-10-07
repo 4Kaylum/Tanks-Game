@@ -1,0 +1,3 @@
+{
+	"Player1" : ["pygame.K_UP","pygame.K_LEFT,","pygame.K_DOWN","pygame.K_RIGHT","pygame.K_KP0"]
+}
