@@ -12,20 +12,27 @@ class Window:
         # Init the Pygame module
         pygame.init()
         self.clock = pygame.time.Clock()
+
         # Create the window itself
         self.window = pygame.display.set_mode(dimensions)
         pygame.display.set_caption(title)
         self.window.fill([255, 255, 255])
+
         # Create the array of drawn walls
         self.levelWalls = []
+
         # Store the players within the class
         self.playerOne = Player(1)
         self.playerTwo = Player(2)
+
         # Create the Pygame allspritelist group
-        self.allSprites = pygame.sprite.Group()
+        self.wallGroup = pygame.sprite.Group()
+        self.bulletGroup = pygame.sprite.Group()
+        self.playerGroup = pygame.sprite.Group()
+
         # Add the players to the sprite list
-        self.allSprites.add(self.playerOne)
-        self.allSprites.add(self.playerTwo)
+        self.playerGroup.add(self.playerOne)
+        self.playerGroup.add(self.playerTwo)
 
     # Change the title of the window
     def changeCaption(self, title="Blank"):
@@ -44,8 +51,10 @@ class Window:
         # Read the level from the JSON
         with open(level) as a:
             settings = json.load(a)
+
         # Get the walls from that level
         wallList = settings['TileSet']
+
         for wall in wallList:
             # topLeft=[0, 0], dimensions=[0, 0], colour=[255, 255, 255]
             temp = Wall(
@@ -54,11 +63,14 @@ class Window:
                 colour=wall['Colour'])
             # Add the wall to the global lists
             self.levelWalls.append(temp)
-            self.allSprites.add(temp)
+            self.wallGroup.add(temp)
 
     # Draw all sprites to screen
     def drawAll(self):
-        self.allSprites.draw(self.window)
+        self.wallGroup.draw(self.window)
+        self.bulletGroup.draw(self.window)
+        self.playerGroup.draw(self.window)
+
         pygame.display.flip()
         self.clock.tick(60)
 
@@ -74,10 +86,13 @@ class Wall(pygame.sprite.Sprite):
 
         # Create the surface of the wall
         self.image = pygame.Surface(dimensions)
+
         # Colour it
         self.image.fill(colour)
+
         # Give its rect
         self.rect = self.image.get_rect()
+
         # Store its top left
         self.topLeft = topLeft
         self.rect.x = self.topLeft[0]
@@ -91,19 +106,23 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, playerNumber=0):
         # Init the class
         super().__init__()
+
         # Read buttons from the settings
         self.buttons = []
+
         # Create X and Y coords, don't set: to be set by level
         self.X = None
         self.Y = None
+
         # Store playerNumber so it doesn't need to be read again later
         self.playerNumber = playerNumber
+
         # Create it as an object - just debug as red for now
-        self.image = pygame.Surface([15,15])
-        self.image.fill([255,0,0])
+        self.image = pygame.Surface([15, 15])
+        self.image.fill([255, 0, 0])
+
         # Store its rect
         self.rect = self.image.get_rect()
-
 
     # Set a player's location depending on the map
     def setLocation(self, coOrds):
@@ -135,14 +154,14 @@ if __name__ == '__main__':
     # Create the window
     window = Window()
     tick = True
+
     # Run the game while the quit button hasn't been pressed
     while window.checkQuit():
         if tick:
             tick = not tick
             window.makeWalls('Data/Levels/blankLevel.json')
-        window.playerOne.setLocation([100,100])
+        window.playerOne.setLocation([100, 100])
         window.drawAll()
-
 
     # Out of the loop; kill the program
     pygame.quit()
