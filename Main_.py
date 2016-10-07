@@ -8,7 +8,7 @@ import json
 class Window:
 
     # To be called when the class is created
-    def __init__(self, *, dimensions=[1152, 647], title="Blank", players=[0, 0]):
+    def __init__(self, *, dimensions=[1152, 647], title="Blank"):
         # Init the Pygame module
         pygame.init()
         self.clock = pygame.time.Clock()
@@ -19,10 +19,13 @@ class Window:
         # Create the array of drawn walls
         self.levelWalls = []
         # Store the players within the class
-        self.PlayerOne = players[0]
-        self.PlayerTwo = players[1]
+        self.playerOne = Player(1)
+        self.playerTwo = Player(2)
         # Create the Pygame allspritelist group
         self.allSprites = pygame.sprite.Group()
+        # Add the players to the sprite list
+        self.allSprites.add(self.playerOne)
+        self.allSprites.add(self.playerTwo)
 
     # Change the title of the window
     def changeCaption(self, title="Blank"):
@@ -46,9 +49,9 @@ class Window:
         for wall in wallList:
             # topLeft=[0, 0], dimensions=[0, 0], colour=[255, 255, 255]
             temp = Wall(
-                wall['Vertices'][0],
-                wall['Vertices'][1],
-                wall['Colour'])
+                topLeft=wall['Vertices'][0],
+                dimensions=wall['Vertices'][1],
+                colour=wall['Colour'])
             # Add the wall to the global lists
             self.levelWalls.append(temp)
             self.allSprites.add(temp)
@@ -85,21 +88,33 @@ class Wall(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
 
     # Defines everything about the player
-    def __init__(self, *, settingsJSON='', playerNumber=0):
-        # Read settings from the JSON
-        with open(settingsJSON) as a:
-            settings = json.load(a)
-        # Read buttons form the settings
-        self.buttons = settings['Player{}'.format(playerNumber)]
+    def __init__(self, playerNumber=0):
+        # Init the class
+        super().__init__()
+        # Read buttons from the settings
+        self.buttons = []
         # Create X and Y coords, don't set: to be set by level
         self.X = None
         self.Y = None
         # Store playerNumber so it doesn't need to be read again later
         self.playerNumber = playerNumber
+        # Create it as an object - just debug as red for now
+        self.image = pygame.Surface([15,15])
+        self.image.fill([255,0,0])
+        # Store its rect
+        self.rect = self.image.get_rect()
+
 
     # Set a player's location depending on the map
-    def setLocation(self, map):
-        pass
+    def setLocation(self, coOrds):
+        self.rect.x = coOrds[0]
+        self.rect.y = coOrds[1]
+
+    # Load the settings from the file
+    def readSettings(self, jsonFile):
+        with open(settingsJSON) as a:
+            settings = json.load(a)
+        self.buttons = settings['Player{}'.format(playerNumber)]
 
     # Check if the player clicked quit
     def checkQuit(self):
@@ -109,17 +124,25 @@ class Player(pygame.sprite.Sprite):
                 return False
         return True
 
+    # Check any collisions between itself and another object
+    def checkCollision(self, otherObject):
+        # self.
+        pass
+
 # Main running code
 # This will be all of the "game" stuff
 if __name__ == '__main__':
     # Create the window
     window = Window()
+    tick = True
     # Run the game while the quit button hasn't been pressed
     while window.checkQuit():
         if tick:
             tick = not tick
-            window.makeWalls('Data/Levels/levelOne.json')
+            window.makeWalls('Data/Levels/blankLevel.json')
+        window.playerOne.setLocation([100,100])
         window.drawAll()
+
 
     # Out of the loop; kill the program
     pygame.quit()
