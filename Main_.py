@@ -4,6 +4,7 @@ import pygame
 from wallClass import *
 from playerClass import *
 from windowClass import *
+from bulletClass import *
 
 
 # Main running code
