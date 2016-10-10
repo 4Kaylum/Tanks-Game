@@ -15,12 +15,11 @@ if __name__ == '__main__':
     window.playerOne.setLocation([200, 200])
     window.playerOne.buttons = {'up':pygame.K_UP,'left':pygame.K_LEFT,'down':pygame.K_DOWN,'right':pygame.K_RIGHT,'fire':pygame.K_KP0}
     window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
-    tick = True
 
     # Run the game while the quit button hasn't been pressed
     while window.checkQuit():
-        if tick:
-            tick = not tick
+        if window.tick:
+            window.tick = not window.tick
             window.makeWalls('Data/Levels/levelTwo.json')
         window.playerOne.checkKeypress()
         window.playerTwo.checkKeypress()

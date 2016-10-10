@@ -36,6 +36,9 @@ class Window:
         self.playerGroup.add(self.playerOne)
         self.playerGroup.add(self.playerTwo)
 
+        # Variable to see whether or not to regen walls
+        self.tick = True
+
     # Change the title of the window
     def changeCaption(self, title="Blank"):
         self.window.set_caption(title)
@@ -50,6 +53,9 @@ class Window:
 
     # Create and draw the walls onto the canvas
     def makeWalls(self, level):
+        # Clear the arrays, should there be anything in them
+        self.wallGroup.empty()
+        self.levelWalls = []
         # Read the level from the JSON
         with open(level) as a:
             settings = json.load(a)

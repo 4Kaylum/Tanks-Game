@@ -27,6 +27,10 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         # Store it's last generated bullet. This is always temporary to go into the Window class
+        self.bullet = None
+
+        # Store it's last moved direction. Up left down right, 0 1 2 3
+        self.direction = 0
 
     # Set a player's location depending on the map
     def setLocation(self, coOrds):
