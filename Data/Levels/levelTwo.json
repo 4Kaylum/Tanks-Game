@@ -1,0 +1,10 @@
+{
+	"TileSet" : [
+		{"Vertices":[[200,200],[200,200]],"Colour":[0,0,0]}
+	],
+	"Name" : "Level One",
+	"ID" : 0,
+	"PlayerOneStart" : [200,200],
+	"PlayerTwoStart" : [600,600]
+}
+

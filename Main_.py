@@ -76,6 +76,11 @@ class Window:
         pygame.display.flip()
         self.clock.tick(60)
 
+    # Check if the tanks generated any bullets that need to be added
+    def addBullets(self):
+        [self.playerOne.bullet, self.playerTwo.bullet]
+
+
 
 # Create the wall class
 class Wall(pygame.sprite.Sprite):
@@ -127,10 +132,19 @@ class Player(pygame.sprite.Sprite):
         # Store its rect
         self.rect = self.image.get_rect()
 
+        # Store it's last generated bullet. This is always temporary to go into the Window class
+
     # Set a player's location depending on the map
     def setLocation(self, coOrds):
-        self.rect.x = coOrds[0]
-        self.rect.y = coOrds[1]
+        self.rect.x += coOrds[0]
+        self.rect.y += coOrds[1]
+
+    # Moves a player's relative location
+    def moveLocation(self):
+        self.rect.x += self.X_c
+        self.rect.y += self.Y_c
+        self.X_c = 0
+        self.Y_c = 0
 
     # Load the settings from the file
     def readSettings(self, jsonFile):
@@ -146,26 +160,50 @@ class Player(pygame.sprite.Sprite):
                 return False
         return True
 
-    # Check any collisions between itself and another object
-    def checkCollision(self, otherObject):
-        # self.
-        pass
-
     # Check the assigned buttons to see if there's any keypresses
     def checkKeypress(self):
         x = pygame.key.get_pressed()
 
         ## Change rotation value based on LR values
         if x[self.buttons['right']]:
-            self.rect.x += 3 # Subject to change
+            self.X_c += 3 # Subject to change
         if x[self.buttons['left']]:
-            self.rect.x -= 3 # Subject to change
+            self.X_c -= 3 # Subject to change
 
         ## Change XY values based on UD values
         if x[self.buttons['up']]:
-            self.rect.y -= 3 # Subject to change
+            self.Y_c -= 3 # Subject to change
         if x[self.buttons['down']]:
-            self.rect.y += 3 # Subject to change
+            self.Y_c += 3 # Subject to change
+
+        if x[self.buttons['fire']]:
+            self.bullet = makeBullet(self)
+
+        # self.moveLocation()
+        # self.checkCollide()
+
+    # Check any collisions between itself and another object
+    def checkCollide(self, wallGroup):
+        # Check what it's hit with - gives list of images
+        hitList = pygame.sprite.spritecollide(self, wallGroup, False)
+        # Go through each one, find it's bound
+        for block in hitList:
+            # Check top-bottom
+            if self.Y_c < 0: # If going up set top to block's bottom
+                self.rect.top = block.rect.bottom + 3
+            elif self.Y_c > 0:
+                self.rect.bottom = block.rect.top - 3
+
+        # Regenerate list to avoid conflits
+        hitList = pygame.sprite.spritecollide(self, wallGroup, False)
+        for block in hitList:
+            # Check left-right
+            if self.X_c < 0:
+                self.rect.left = block.rect.right + 3
+            elif self.X_c > 0:
+                self.rect.right = block.rect.left - 3
+        self.moveLocation()
+
 
 
 # Main running code
@@ -174,7 +212,7 @@ if __name__ == '__main__':
     # Create the window
     window = Window()
     # window.playerOne.readSettings('Data/settings.json')
-    window.playerOne.setLocation([100, 100])
+    window.playerOne.setLocation([200, 200])
     window.playerOne.buttons = {'up':pygame.K_UP,'left':pygame.K_LEFT,'down':pygame.K_DOWN,'right':pygame.K_RIGHT,'fire':pygame.K_KP0}
     window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
     tick = True
@@ -183,9 +221,11 @@ if __name__ == '__main__':
     while window.checkQuit():
         if tick:
             tick = not tick
-            window.makeWalls('Data/Levels/levelOne.json')
+            window.makeWalls('Data/Levels/levelTwo.json')
         window.playerOne.checkKeypress()
         window.playerTwo.checkKeypress()
+        window.playerOne.checkCollide(window.wallGroup)
+        window.playerTwo.checkCollide(window.wallGroup)
         window.drawAll()
 
     # Out of the loop; kill the program
