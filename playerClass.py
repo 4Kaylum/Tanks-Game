@@ -1,4 +1,5 @@
 import pygame
+from bulletClass import *
 
 # Create the player class
 class Player(pygame.sprite.Sprite):
@@ -65,17 +66,21 @@ class Player(pygame.sprite.Sprite):
         ## Change rotation value based on LR values
         if x[self.buttons['right']]:
             self.X_c += 3 # Subject to change
+            self.direction = 3
         if x[self.buttons['left']]:
             self.X_c -= 3 # Subject to change
+            self.direction = 1
 
         ## Change XY values based on UD values
         if x[self.buttons['up']]:
             self.Y_c -= 3 # Subject to change
+            self.direction = 0
         if x[self.buttons['down']]:
             self.Y_c += 3 # Subject to change
+            self.direction = 2
 
         if x[self.buttons['fire']]:
-            self.bullet = makeBullet(self)
+            self.bullet = Bullet(self)
 
         # self.moveLocation()
         # self.checkCollide()

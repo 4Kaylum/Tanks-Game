@@ -85,4 +85,11 @@ class Window:
 
     # Check if the tanks generated any bullets that need to be added
     def addBullets(self):
-        [self.playerOne.bullet, self.playerTwo.bullet]
+        if self.playerOne.bullet != None:
+            self.bulletGroup.add(self.playerOne.bullet)
+            self.playerOne.bullet = None
+        if self.playerTwo.bullet != None:
+            self.bulletGroup.add(self.playerTwo.bullet)
+            self.playerTwo.bullet = None
+        
+

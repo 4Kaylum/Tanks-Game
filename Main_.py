@@ -24,6 +24,8 @@ if __name__ == '__main__':
             window.makeWalls('Data/Levels/levelTwo.json')
         window.playerOne.checkKeypress()
         window.playerTwo.checkKeypress()
+        window.addBullets()
+        window.bulletGroup.update()
         window.playerOne.checkCollide(window.wallGroup)
         window.playerTwo.checkCollide(window.wallGroup)
         window.drawAll()
