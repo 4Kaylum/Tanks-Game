@@ -12,6 +12,8 @@ class Window:
     def __init__(self, *, dimensions=[1152, 647], title="Blank"):
         # Init the Pygame module
         pygame.init()
+
+
         self.clock = pygame.time.Clock()
 
         # Create the window itself
@@ -24,8 +26,8 @@ class Window:
         self.levelWalls = []
 
         # Store the players within the class
-        self.playerOne = Player(1)
-        self.playerTwo = Player(2)
+        self.playerOne = Player(1, self)
+        self.playerTwo = Player(2, self)
 
         # Create the Pygame allspritelist group
         self.wallGroup = pygame.sprite.Group()
@@ -38,6 +40,7 @@ class Window:
 
         # Variable to see whether or not to regen walls
         self.tick = True
+        self.frame = 0
 
     # Change the title of the window
     def changeCaption(self, title="Blank"):
@@ -81,7 +84,7 @@ class Window:
         self.playerGroup.draw(self.window)
 
         pygame.display.flip()
-        self.clock.tick(60)
+        self.clock.tick(30)
 
     # Check if the tanks generated any bullets that need to be added
     def addBullets(self):

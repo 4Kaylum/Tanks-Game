@@ -1,13 +1,17 @@
 import pygame
 from bulletClass import *
+from time import time
 
 # Create the player class
 class Player(pygame.sprite.Sprite):
 
     # Defines everything about the player
-    def __init__(self, playerNumber=0):
+    def __init__(self, playerNumber, parent):
         # Init the class
         super().__init__()
+
+        # Keep track of frame tick
+        self.parent = parent
 
         # Read buttons from the settings
         self.buttons = {}
@@ -32,6 +36,9 @@ class Player(pygame.sprite.Sprite):
 
         # Store it's last moved direction. Up left down right, 0 1 2 3
         self.direction = 0
+
+        # Make it so you can't spam bullets
+        self.lastShot = -500
 
     # Set a player's location depending on the map
     def setLocation(self, coOrds):
@@ -79,8 +86,10 @@ class Player(pygame.sprite.Sprite):
             self.Y_c += 3 # Subject to change
             self.direction = 2
 
-        if x[self.buttons['fire']]:
-            self.bullet = Bullet(self)
+        if self.parent.frame > self.lastShot + 20:
+            self.lastShot = self.parent.frame
+            if x[self.buttons['fire']]:
+                self.bullet = Bullet(self)
 
         # self.moveLocation()
         # self.checkCollide()

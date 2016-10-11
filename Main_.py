@@ -13,15 +13,17 @@ if __name__ == '__main__':
     # Create the window
     window = Window()
     # window.playerOne.readSettings('Data/settings.json')
-    window.playerOne.setLocation([200, 200])
+    window.playerOne.setLocation([500, 500])
     window.playerOne.buttons = {'up':pygame.K_UP,'left':pygame.K_LEFT,'down':pygame.K_DOWN,'right':pygame.K_RIGHT,'fire':pygame.K_KP0}
     window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
 
     # Run the game while the quit button hasn't been pressed
     while window.checkQuit():
+        window.frame += 1
         if window.tick:
             window.tick = not window.tick
             window.makeWalls('Data/Levels/levelTwo.json')
+
         window.playerOne.checkKeypress()
         window.playerTwo.checkKeypress()
         window.addBullets()
@@ -29,6 +31,8 @@ if __name__ == '__main__':
         window.playerOne.checkCollide(window.wallGroup)
         window.playerTwo.checkCollide(window.wallGroup)
         window.drawAll()
+        
+        print(window.frame)
 
     # Out of the loop; kill the program
     pygame.quit()
