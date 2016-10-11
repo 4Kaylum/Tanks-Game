@@ -1,6 +1,7 @@
 import pygame
 from bulletClass import *
 from time import time
+import math
 
 # Create the player class
 class Player(pygame.sprite.Sprite):
@@ -36,6 +37,7 @@ class Player(pygame.sprite.Sprite):
 
         # Store it's last moved direction. Up left down right, 0 1 2 3
         self.direction = 0
+        self.rotation = 0 
 
         # Make it so you can't spam bullets
         self.lastShot = -500
@@ -47,6 +49,7 @@ class Player(pygame.sprite.Sprite):
 
     # Moves a player's relative location
     def moveLocation(self):
+
         self.rect.x += self.X_c
         self.rect.y += self.Y_c
         self.X_c = 0
@@ -73,26 +76,32 @@ class Player(pygame.sprite.Sprite):
         ## Change rotation value based on LR values
         if x[self.buttons['right']]:
             self.X_c += 3 # Subject to change
-            self.direction = 3
+            self.rotation -= 1
         if x[self.buttons['left']]:
             self.X_c -= 3 # Subject to change
-            self.direction = 1
+            self.rotation += 1
 
         ## Change XY values based on UD values
         if x[self.buttons['up']]:
             self.Y_c -= 3 # Subject to change
-            self.direction = 0
         if x[self.buttons['down']]:
             self.Y_c += 3 # Subject to change
-            self.direction = 2
+
+        if self.rotation > 360:
+            self.rotation -= 360
+        elif self.rotation < 0:
+            self.rotation += 360
 
         if self.parent.frame > self.lastShot + 20:
             self.lastShot = self.parent.frame
             if x[self.buttons['fire']]:
                 self.bullet = Bullet(self)
 
-        # self.moveLocation()
-        # self.checkCollide()
+    def rotCentre(self, image, rect, angle):
+        """rotate an image while keeping its center"""
+        rot_image = pygame.transform.rotate(image, angle)
+        rot_rect = rot_image.get_rect(center=rect.center)
+        return rot_image,rot_rect
 
     # Check any collisions between itself and another object
     def checkCollide(self, wallGroup):
