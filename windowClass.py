@@ -67,6 +67,7 @@ class Window:
         wallList = settings['TileSet']
 
         for wall in wallList:
+            print(wall)
             # topLeft=[0, 0], dimensions=[0, 0], colour=[255, 255, 255]
             temp = Wall(
                 topLeft=wall['Vertices'][0],
