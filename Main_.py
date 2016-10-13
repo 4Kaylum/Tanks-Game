@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # Create the window
     window = Window()
     # window.playerOne.readSettings('Data/settings.json')
-    window.playerOne.setLocation([500, 500])
+    window.playerOne.setLocation([420, 300])
     window.playerOne.buttons = {'up':pygame.K_UP,'left':pygame.K_LEFT,'down':pygame.K_DOWN,'right':pygame.K_RIGHT,'fire':pygame.K_KP0}
     window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
         window.playerTwo.checkCollide(window.wallGroup)
         window.drawAll()
         
-        print(window.frame)
+        print(str(window.frame)+' '+str([str(window.playerOne.rect.x),str(window.playerOne.rect.y),str(window.playerOne.rotation)]))
 
     # Out of the loop; kill the program
     pygame.quit()
