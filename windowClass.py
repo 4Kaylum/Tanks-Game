@@ -113,6 +113,8 @@ class Window:
         # -- between bullets/walls
         for i in self.bulletGroup:
             i.checkCollide(self.wallGroup)
+            if i.deleteFlag == True:
+                i.kill()
 
         # self.playerOne.checkExplode(window.wallGroup)
         # self.playerTwo.checkExplode(window.wallGroup)

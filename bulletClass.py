@@ -24,11 +24,20 @@ class Bullet(pygame.sprite.Sprite):
         self.transform = 0
         self.anglePosChange()
 
+        # Make the bullets despawn if health > 5000 or if bounced twice
+        self.lifetime = bulletLifetimeTimeout
+        self.health = bulletHealthStartup
+        self.deleteFlag = False
+
 
     # Where it moves each frame tick
     def update(self):
         self.rect.x += self.transform[0]
         self.rect.y += self.transform[1]
+        self.lifetime -= 1
+        if self.health <= 0 or self.lifetime <= 0:
+            self.deleteFlag = True
+
 
     # Copied the code from player to work out direction
     def anglePosChange(self,forward=True):
@@ -58,6 +67,7 @@ class Bullet(pygame.sprite.Sprite):
 
         self.transform = [X_c, Y_c]
 
+
     # Check collisions of walls
     def checkCollide(self, wallGroup):
         # Check what it's hit with - gives list of images
@@ -69,3 +79,4 @@ class Bullet(pygame.sprite.Sprite):
                 self.rotation -= 360
             self.anglePosChange()
             self.update()
+            self.health -= 1

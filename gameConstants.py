@@ -1,4 +1,6 @@
-playerMovementAmount = 3
-playerRotationAmount = 3
-bulletFrameTimeout = 10
-bulletMovementAmount = 5
+playerMovementAmount = 5
+playerRotationAmount = 5
+bulletFrameTimeout = 15
+bulletMovementAmount = 10
+bulletLifetimeTimeout = 2000
+bulletHealthStartup = 5
