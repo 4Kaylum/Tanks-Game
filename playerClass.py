@@ -22,6 +22,8 @@ class Player(pygame.sprite.Sprite):
         # that there are no collisions
         self.X_c = 0.0
         self.Y_c = 0.0
+        self.X = 0
+        self.Y = 0
 
         # Store playerNumber so it doesn't need to be read again later
         self.playerNumber = playerNumber
@@ -47,14 +49,14 @@ class Player(pygame.sprite.Sprite):
     def setLocation(self, coOrds):
         self.rect.x += coOrds[0]
         self.rect.y += coOrds[1]
+        self.X = self.rect.x
+        self.Y = self.rect.y
 
     # Moves a player's relative location
-    def moveLocation(self):
+    def moveLocation(self, ):
 
-        self.rect.x += int(self.X_c)
-        self.rect.y += int(self.Y_c)
-        # self.X_c = 0
-        # self.Y_c = 0
+        self.rect.x += self.X_c
+        self.rect.y += self.Y_c
 
     # Load the settings from the file
     def readSettings(self, jsonFile):
@@ -83,7 +85,7 @@ class Player(pygame.sprite.Sprite):
             self.rotation += playerRotationAmount
         else:
             self.X_c = 0
-            self.rotation = 0
+            # self.rotation = 0
 
         # Change XY values based on UD values
         if x[self.buttons['up']]:
@@ -92,8 +94,6 @@ class Player(pygame.sprite.Sprite):
         elif x[self.buttons['down']]:
             # self.Y_c += playerMovementAmount
             self.anglePosChange(False)
-        else:
-            self.Y_c = 0
 
         if self.rotation >= 360:
             self.rotation -= 360
@@ -107,25 +107,36 @@ class Player(pygame.sprite.Sprite):
 
     # Get X/Y change values from an angle
     def anglePosChange(self,forward=True):
-        r = self.rotation
-
-        self.X_c = math.sin(r) * playerMovementAmount
+        r_raw = self.rotation
 
         # decreasing x decreasing y
-        if r >= 0 and r < 90:
-            pass
-
+        if r_raw >= 0 and r_raw < 90:
+            multiplier = [-1,-1]
         # decreasing x increasing y
-        elif r >= 90 and r < 180:
-            pass
-            
+        elif r_raw >= 90 and r_raw < 180:
+            multiplier = [-1,-1]         
         # increasing x increasing y
-        elif r >=180 and r < 270:
-            pass
-
+        elif r_raw >= 180 and r_raw < 270:
+            multiplier = [1,1]
+            r_raw -= 180
         # increasing x decreasing y
-        elif r >= 270 and r < 360:
-            pass
+        else:
+            multiplier = [-1,-1]
+
+
+        r_y = r_raw - ( r_raw // 90 )
+        r_x = 90 - r_y
+        forwardMultiplier = {True:1,False:-1}[forward]
+
+        # math.acos(math.radians(r_y)) * playerMovementAmount * multiplier[1] * forwardMultiplier
+        try:
+            self.X_c = multiplier[0] * forwardMultiplier * playerMovementAmount * math.sin(math.radians(r_raw))
+        except:
+            self.X_c = multiplier[0] * forwardMultiplier * playerMovementAmount
+        try:
+            self.Y_c = multiplier[1] * forwardMultiplier * playerMovementAmount * math.cos(math.radians(r_raw))
+        except:
+            self.Y_c = multiplier[1] * forwardMultiplier * playerMovementAmount
 
 
     def rotCentre(self):
@@ -157,4 +168,4 @@ class Player(pygame.sprite.Sprite):
                 self.rect.right = block.rect.left
 
         self.X_c = self.Y_c = 0
-        # self.moveLocation()
+
