@@ -22,14 +22,15 @@ if __name__ == '__main__':
         window.frame += 1
         if window.tick:
             window.tick = not window.tick
-            window.makeWalls('Data/Levels/levelTwo.json')
+            window.makeWalls('Data/Levels/levelOne.json')
 
         window.playerOne.checkKeypress()
         window.playerTwo.checkKeypress()
         window.addBullets()
         window.bulletGroup.update()
-        window.playerOne.checkCollide(window.wallGroup)
-        window.playerTwo.checkCollide(window.wallGroup)
+        # window.playerOne.checkCollide(window.wallGroup)
+        # window.playerTwo.checkCollide(window.wallGroup)
+        window.collisionHell()
         window.drawAll()
         
         print(str(window.frame)+' '+str([str(window.playerOne.rect.x),str(window.playerOne.rect.y),str(window.playerOne.rotation)]))

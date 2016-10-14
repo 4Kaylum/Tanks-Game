@@ -104,3 +104,16 @@ class Window:
         textpos = text.get_rect()
         self.window.blit(text, location)
 
+    # Oh god there are so many items save me
+    def collisionHell(self):
+        # Check wall collisions
+        # -- between tanks/walls
+        self.playerOne.checkCollide(self.wallGroup)
+        self.playerTwo.checkCollide(self.wallGroup)
+        # -- between bullets/walls
+        for i in self.bulletGroup:
+            i.checkCollide(self.wallGroup)
+
+        # self.playerOne.checkExplode(window.wallGroup)
+        # self.playerTwo.checkExplode(window.wallGroup)
+

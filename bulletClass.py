@@ -21,7 +21,8 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = parent.rect.y
 
         # Make sure it GOES to the right place when moving
-        self.transform = self.anglePosChange()
+        self.transform = 0
+        self.anglePosChange()
 
 
     # Where it moves each frame tick
@@ -55,4 +56,16 @@ class Bullet(pygame.sprite.Sprite):
         X_c = multiplier[0] * forwardMultiplier * bulletMovementAmount * math.sin(math.radians(r_raw))
         Y_c = multiplier[1] * forwardMultiplier * bulletMovementAmount * math.cos(math.radians(r_raw))
 
-        return [X_c, Y_c]
+        self.transform = [X_c, Y_c]
+
+    # Check collisions of walls
+    def checkCollide(self, wallGroup):
+        # Check what it's hit with - gives list of images
+        hitList = pygame.sprite.spritecollide(self, wallGroup, False)
+        # Go through each one, find it's bound
+        if len(hitList) > 0:
+            self.rotation += 180
+            if self.rotation > 360:
+                self.rotation -= 360
+            self.anglePosChange()
+            self.update()
