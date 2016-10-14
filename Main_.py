@@ -22,7 +22,7 @@ if __name__ == '__main__':
         window.frame += 1
         if window.tick:
             window.tick = not window.tick
-            window.makeWalls('Data/Levels/levelOne.json')
+            window.makeWalls('Data/Levels/testDoc.json')
 
         window.playerOne.checkKeypress()
         window.playerTwo.checkKeypress()
