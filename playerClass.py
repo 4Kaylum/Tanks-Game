@@ -22,8 +22,6 @@ class Player(pygame.sprite.Sprite):
         # that there are no collisions
         self.X_c = 0.0
         self.Y_c = 0.0
-        self.X = 0
-        self.Y = 0
 
         # Store playerNumber so it doesn't need to be read again later
         self.playerNumber = playerNumber
@@ -47,16 +45,15 @@ class Player(pygame.sprite.Sprite):
 
     # Set a player's location depending on the map
     def setLocation(self, coOrds):
-        self.rect.x += coOrds[0]
-        self.rect.y += coOrds[1]
-        self.X = self.rect.x
-        self.Y = self.rect.y
+        self.rect.x = coOrds[0]
+        self.rect.y = coOrds[1]
 
     # Moves a player's relative location
-    def moveLocation(self, ):
-
-        self.rect.x += self.X_c
-        self.rect.y += self.Y_c
+    def moveLocation(self, coOrds):
+        # self.rect.x += self.X_c
+        # self.rect.y += self.Y_c
+        self.rect.x += coOrds[0]
+        self.rect.y += coOrds[1]        
 
     # Load the settings from the file
     def readSettings(self, jsonFile):
@@ -141,7 +138,7 @@ class Player(pygame.sprite.Sprite):
     # Check any collisions between itself and another object
     def checkCollide(self, wallGroup):
         # Move the object to make sure it's collided
-        self.moveLocation()
+        self.moveLocation([0, self.Y_c])
         # Check what it's hit with - gives list of images
         hitList = pygame.sprite.spritecollide(self, wallGroup, False)
         # Go through each one, find it's bound
@@ -153,6 +150,7 @@ class Player(pygame.sprite.Sprite):
                 self.rect.bottom = block.rect.top
 
         # Regenerate list to avoid conflits
+        self.moveLocation([self.X_c, 0])
         hitList = pygame.sprite.spritecollide(self, wallGroup, False)
         for block in hitList:
             # Check left-right
