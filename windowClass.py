@@ -83,6 +83,7 @@ class Window:
         self.wallGroup.draw(self.window)
         self.bulletGroup.draw(self.window)
         self.playerGroup.draw(self.window)
+        self.makeFont(str(self.frame), [0,0])
 
         pygame.display.flip()
         self.clock.tick(30)
@@ -96,4 +97,10 @@ class Window:
             self.bulletGroup.add(self.playerTwo.bullet)
             self.playerTwo.bullet = None
         
+    # Add a font to the screen
+    def makeFont(self, text, location, size=36):
+        font = pygame.font.Font(None, size)
+        text = font.render(text, 1, (10, 10, 10))
+        textpos = text.get_rect()
+        self.window.blit(text, location)
 
