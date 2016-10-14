@@ -129,14 +129,8 @@ class Player(pygame.sprite.Sprite):
         forwardMultiplier = {True:1,False:-1}[forward]
 
         # math.acos(math.radians(r_y)) * playerMovementAmount * multiplier[1] * forwardMultiplier
-        try:
-            self.X_c = multiplier[0] * forwardMultiplier * playerMovementAmount * math.sin(math.radians(r_raw))
-        except:
-            self.X_c = multiplier[0] * forwardMultiplier * playerMovementAmount
-        try:
-            self.Y_c = multiplier[1] * forwardMultiplier * playerMovementAmount * math.cos(math.radians(r_raw))
-        except:
-            self.Y_c = multiplier[1] * forwardMultiplier * playerMovementAmount
+        self.X_c = multiplier[0] * forwardMultiplier * playerMovementAmount * math.sin(math.radians(r_raw))
+        self.Y_c = multiplier[1] * forwardMultiplier * playerMovementAmount * math.cos(math.radians(r_raw))
 
 
     def rotCentre(self):
