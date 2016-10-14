@@ -12,9 +12,9 @@ from bulletClass import *
 if __name__ == '__main__':
     # Create the window
     window = Window()
-    # window.playerOne.readSettings('Data/settings.json')
+    window.playerOne.readSettings('Data/settings.json')
     window.playerOne.setLocation([420, 300])
-    window.playerOne.buttons = {'up':pygame.K_UP,'left':pygame.K_LEFT,'down':pygame.K_DOWN,'right':pygame.K_RIGHT,'fire':pygame.K_KP0}
+    # window.playerOne.buttons = {'up':pygame.K_UP,'left':pygame.K_LEFT,'down':pygame.K_DOWN,'right':pygame.K_RIGHT,'fire':pygame.K_KP0}
     window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
 
     # Run the game while the quit button hasn't been pressed
@@ -24,16 +24,9 @@ if __name__ == '__main__':
             window.tick = not window.tick
             window.makeWalls('Data/Levels/testDoc.json')
 
-        window.playerOne.checkKeypress()
-        window.playerTwo.checkKeypress()
-        window.addBullets()
-        window.bulletGroup.update()
-        # window.playerOne.checkCollide(window.wallGroup)
-        # window.playerTwo.checkCollide(window.wallGroup)
-        window.collisionHell()
-        window.drawAll()
+        window.do()
         
-        print(str(window.frame)+' '+str([str(window.playerOne.rect.x),str(window.playerOne.rect.y),str(window.playerOne.rotation)]))
+        print(str(window.frame)+' [P1 '+str([str(window.playerOne.rect.x),str(window.playerOne.rect.y),str(window.playerOne.rotation)])+']')
 
     # Out of the loop; kill the program
     pygame.quit()

@@ -12,7 +12,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rotation = parent.rotation
 
         # Create a graphical object
-        self.image = pygame.Surface([15, 15])
+        self.image = pygame.Surface([5, 5])
         self.image.fill([255, 0, 0])
         self.rect = self.image.get_rect()
 

@@ -3,6 +3,7 @@ from bulletClass import *
 from time import time
 import math
 from gameConstants import *
+import json
 
 # Create the player class
 class Player(pygame.sprite.Sprite):
@@ -75,20 +76,15 @@ class Player(pygame.sprite.Sprite):
 
         # Change rotation value based on LR values
         if x[self.buttons['right']]:
-            # self.X_c += playerMovementAmount
             self.rotation -= playerRotationAmount
-        elif x[self.buttons['left']]:
-            # self.X_c -= playerMovementAmount
+        if x[self.buttons['left']]:
             self.rotation += playerRotationAmount
-        else:
-            self.X_c = 0
-            # self.rotation = 0
 
         # Change XY values based on UD values
         if x[self.buttons['up']]:
             # self.Y_c -= playerMovementAmount
             self.anglePosChange(True)
-        elif x[self.buttons['down']]:
+        if x[self.buttons['down']]:
             # self.Y_c += playerMovementAmount
             self.anglePosChange(False)
 

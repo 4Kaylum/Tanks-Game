@@ -119,3 +119,12 @@ class Window:
         # self.playerOne.checkExplode(window.wallGroup)
         # self.playerTwo.checkExplode(window.wallGroup)
 
+
+    def do(self):
+        self.playerOne.checkKeypress()
+        self.playerTwo.checkKeypress()
+        self.addBullets()
+        self.bulletGroup.update()
+        self.collisionHell()
+        self.drawAll()
+

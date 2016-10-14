@@ -1,3 +1,3 @@
 {
-	"Player1" : ["pygame.K_UP","pygame.K_LEFT,","pygame.K_DOWN","pygame.K_RIGHT","pygame.K_KP0"]
+	"Player1" : {"down":274, "left":276, "fire":256, "up":273, "right":275}
 }
