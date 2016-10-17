@@ -29,6 +29,7 @@ class Player(pygame.sprite.Sprite):
 
         # Create it as an object - just debug as red for now
         self.image = pygame.Surface([15, 15])
+        # self.image = pygame.image.load(imagePath)
         self.image.fill([255, 0, 0])
 
         # Store its rect
@@ -42,7 +43,11 @@ class Player(pygame.sprite.Sprite):
         self.rotation = 0 
 
         # Make it so you can't spam bullets
-        self.lastShot = -500
+        self.lastShot = -5000
+
+        # Keep score for the user
+        self.score = 0
+
 
     # Set a player's location depending on the map
     def setLocation(self, coOrds):

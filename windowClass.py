@@ -4,6 +4,7 @@ import json
 
 from wallClass import *
 from playerClass import *
+from gameConstants import *
 
 # Create a window object for the class
 class Window:
@@ -86,7 +87,7 @@ class Window:
         self.makeFont(str(self.frame), [0,0])
 
         pygame.display.flip()
-        self.clock.tick(30)
+        self.clock.tick(fpsCounter)
 
     # Check if the tanks generated any bullets that need to be added
     def addBullets(self):

@@ -22,11 +22,11 @@ if __name__ == '__main__':
         window.frame += 1
         if window.tick:
             window.tick = not window.tick
-            window.makeWalls('Data/Levels/testDoc.json')
+            window.makeWalls('Data/Levels/levelThree.json')
 
         window.do()
         
-        print(str(window.frame)+' [P1 '+str([str(window.playerOne.rect.x),str(window.playerOne.rect.y),str(window.playerOne.rotation)])+']')
+        print(str(hex(window.frame)).upper()[2:]+' [P1 '+str([str(window.playerOne.rect.x),str(window.playerOne.rect.y),str(window.playerOne.rotation)])+']')
 
     # Out of the loop; kill the program
     pygame.quit()

@@ -4,3 +4,4 @@ bulletFrameTimeout = 15
 bulletMovementAmount = 10
 bulletLifetimeTimeout = 2000
 bulletHealthStartup = 5
+fpsCounter = 30
