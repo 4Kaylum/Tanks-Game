@@ -84,7 +84,7 @@ class Window:
         self.wallGroup.draw(self.window)
         self.bulletGroup.draw(self.window)
         self.playerGroup.draw(self.window)
-        self.makeFont(str(self.frame), [0,0])
+        self.makeFont(str(hex(self.frame)).upper()[2:], [0,0])
 
         pygame.display.flip()
         self.clock.tick(fpsCounter)

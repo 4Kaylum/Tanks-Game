@@ -28,12 +28,12 @@ class Player(pygame.sprite.Sprite):
         self.playerNumber = playerNumber
 
         # Create it as an object - just debug as red for now
-        self.image = pygame.Surface([15, 15])
-        # self.image = pygame.image.load(imagePath)
+        # self.imageOriginal = pygame.Surface([15, 15])
+        self.imageOriginal = pygame.image.load(currentDirectory + '\\Data\\PlayerOne.png')
+        self.rectOriginal = self.imageOriginal.get_rect()
+        self.image = self.imageOriginal
+        self.rect = self.rectOriginal
         self.image.fill([255, 0, 0])
-
-        # Store its rect
-        self.rect = self.image.get_rect()
 
         # Store it's last generated bullet. This is always temporary to go into the Window class
         self.bullet = None
@@ -84,14 +84,21 @@ class Player(pygame.sprite.Sprite):
             self.rotation -= playerRotationAmount
         if x[self.buttons['left']]:
             self.rotation += playerRotationAmount
+        self.anglePosChange(True, False)
 
         # Change XY values based on UD values
         if x[self.buttons['up']]:
             # self.Y_c -= playerMovementAmount
             self.anglePosChange(True)
+            # move = True
+            # actuallyMove = True
+            # rotate = True
         if x[self.buttons['down']]:
             # self.Y_c += playerMovementAmount
             self.anglePosChange(False)
+            # move = False
+            # actuallyMove = True
+            # rotate = True
 
         if self.rotation >= 360:
             self.rotation -= 360
@@ -103,8 +110,9 @@ class Player(pygame.sprite.Sprite):
             if x[self.buttons['fire']]:
                 self.bullet = Bullet(self)
 
+
     # Get X/Y change values from an angle
-    def anglePosChange(self,forward=True):
+    def anglePosChange(self,forward=True,actuallyMove=True):
         r_raw = self.rotation
 
         # decreasing x decreasing y
@@ -126,15 +134,42 @@ class Player(pygame.sprite.Sprite):
         r_x = 90 - r_y
         forwardMultiplier = {True:1,False:-1}[forward]
 
+        # self.image, self.rect = self.rotCentre()
+        self.rotCentre()
+
+        if actuallyMove == False:
+            return
+
         # math.acos(math.radians(r_y)) * playerMovementAmount * multiplier[1] * forwardMultiplier
         self.X_c = multiplier[0] * forwardMultiplier * playerMovementAmount * math.sin(math.radians(r_raw))
         self.Y_c = multiplier[1] * forwardMultiplier * playerMovementAmount * math.cos(math.radians(r_raw))
 
 
     def rotCentre(self):
-        rot_image = pygame.transform.rotate(self.image, self.angle)
+        # rot_image = pygame.transform.rotate(self.image, self.rotation)
+        # rot_rect = rot_image.get_rect(center=self.rect.center)
+        # return rot_image, rot_rect
+
+        # orig_rect = self.imageOriginal.get_rect()
+        # rot_image = pygame.transform.rotate(self.imageOriginal, self.rotation)
+        # rot_rect = orig_rect.copy()
+        # rot_rect.center = rot_image.get_rect().center
+        # rot_image = rot_image.subsurface(rot_rect).copy()
+        # return rot_image
+
+        # x = pygame.transform.rotate(self.imageOriginal.copy(), self.rotation)
+        # y = x.get_rect()
+        # return x, y
+
+        rot_image = pygame.transform.rotate(self.imageOriginal, self.rotation)
         rot_rect = rot_image.get_rect(center=self.rect.center)
-        return rot_image, rot_rect
+        self.image = rot_image
+        self.rect = rot_rect
+        
+        self.image.fill([255, 0, 0])
+
+        # self.image = pygame.transform.rotate(self.imageOriginal, self.rotation)
+        # self.rect = self.image.get_rect(center=self.rect.center)
 
     # Check any collisions between itself and another object
     def checkCollide(self, wallGroup):

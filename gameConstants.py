@@ -1,3 +1,6 @@
+import os 
+
+currentDirectory = os.path.dirname(os.path.realpath(__file__)) # Do not change.
 playerMovementAmount = 5
 playerRotationAmount = 5
 bulletFrameTimeout = 15
