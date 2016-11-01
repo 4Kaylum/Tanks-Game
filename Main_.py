@@ -14,8 +14,6 @@ if __name__ == '__main__':
     # Create the window
     window = Window()
     window.playerOne.readSettings(currentDirectory + '\\Data\\settings.json')
-    window.playerOne.setLocation([420, 300])
-    # window.playerOne.buttons = {'up':pygame.K_UP,'left':pygame.K_LEFT,'down':pygame.K_DOWN,'right':pygame.K_RIGHT,'fire':pygame.K_KP0}
     window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
 
     # Run the game while the quit button hasn't been pressed
@@ -23,11 +21,12 @@ if __name__ == '__main__':
         window.frame += 1
         if window.tick:
             window.tick = not window.tick
-            window.makeWalls(currentDirectory + '\\Data\\Levels\\{}.json'.format('levelThree'))
+            window.makeWalls(window.levelPath())
+            window.playerStartupLocations(window.levelPath())
 
         window.do()
         
-        print(str(hex(window.frame)).upper()[2:]+' [P1 '+str([str(window.playerOne.rect.center[0]),str(window.playerOne.rect.center[1]),str(window.playerOne.rotation)])+']')
+        print(str(hex(window.frame)).upper()[2:]+' [P1 '+str([str(window.playerOne.rect.center[0]),str(window.playerOne.rect.center[1]),str(window.playerOne.rotation)])+'] [P2 '+str([str(window.playerTwo.rect.center[0]),str(window.playerTwo.rect.center[1]),str(window.playerTwo.rotation)])+']')
 
     # Out of the loop; kill the program
     pygame.quit()
