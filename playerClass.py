@@ -28,18 +28,16 @@ class Player(pygame.sprite.Sprite):
         self.playerNumber = playerNumber
 
         # Create it as an object - just debug as red for now
-        # self.imageOriginal = pygame.Surface([15, 15])
-        self.imageOriginal = pygame.image.load(currentDirectory + '\\Data\\PlayerOne.png')
+        self.imageOriginal = pygame.Surface([playerSize, playerSize])
+        # self.imageOriginal = pygame.image.load(currentDirectory + '\\Data\\PlayerOne.png')
         self.rectOriginal = self.imageOriginal.get_rect()
         self.image = self.imageOriginal
         self.rect = self.rectOriginal
-        self.image.fill([255, 0, 0])
 
         # Store it's last generated bullet. This is always temporary to go into the Window class
         self.bullet = None
 
-        # Store it's last moved direction. Up left down right, 0 1 2 3
-        self.direction = 0.0
+        # Store it's last moved direction.
         self.rotation = 0 
 
         # Make it so you can't spam bullets
@@ -146,30 +144,17 @@ class Player(pygame.sprite.Sprite):
 
 
     def rotCentre(self):
-        # rot_image = pygame.transform.rotate(self.image, self.rotation)
-        # rot_rect = rot_image.get_rect(center=self.rect.center)
-        # return rot_image, rot_rect
 
-        # orig_rect = self.imageOriginal.get_rect()
-        # rot_image = pygame.transform.rotate(self.imageOriginal, self.rotation)
-        # rot_rect = orig_rect.copy()
-        # rot_rect.center = rot_image.get_rect().center
-        # rot_image = rot_image.subsurface(rot_rect).copy()
-        # return rot_image
+        self.image.fill(playerColour[self.playerNumber-1])
 
-        # x = pygame.transform.rotate(self.imageOriginal.copy(), self.rotation)
-        # y = x.get_rect()
-        # return x, y
+        return # Uncomment to turn off image rotation
 
         rot_image = pygame.transform.rotate(self.imageOriginal, self.rotation)
         rot_rect = rot_image.get_rect(center=self.rect.center)
         self.image = rot_image
         self.rect = rot_rect
         
-        self.image.fill([255, 0, 0])
-
-        # self.image = pygame.transform.rotate(self.imageOriginal, self.rotation)
-        # self.rect = self.image.get_rect(center=self.rect.center)
+        # self.image.fill([255, 0, 0]) # Uncomment this to fill image hitbox
 
     # Check any collisions between itself and another object
     def checkCollide(self, wallGroup):
@@ -196,4 +181,10 @@ class Player(pygame.sprite.Sprite):
                 self.rect.right = block.rect.left
 
         self.X_c = self.Y_c = 0
+
+    def bulletCollide(self, bulletGroup):
+        # Check what it's hit with - gives list of images
+        hitList = pygame.sprite.spritecollide(self, bulletGroup, False)
+        if len(hitList) > 0:
+            print("ouch {}".format(self.playerNumber))
 
