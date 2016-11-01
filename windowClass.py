@@ -120,6 +120,7 @@ class Window:
             i.checkCollide(self.wallGroup)
             if i.deleteFlag == True:
                 i.kill()
+                print('Bullet {} killed.'.format(i))
 
         self.playerOne.bulletCollide(self.bulletGroup)
         self.playerTwo.bulletCollide(self.bulletGroup)

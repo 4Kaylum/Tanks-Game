@@ -74,9 +74,25 @@ class Bullet(pygame.sprite.Sprite):
         hitList = pygame.sprite.spritecollide(self, wallGroup, False)
         # Go through each one, find it's bound
         if len(hitList) > 0:
-            self.rotation += 180
-            if self.rotation > 360:
+
+            # Bounce correctly
+            if self.rotation in [0, 90, 180, 270, 360]:
+                self.rotation += 180
+            elif self.rotation < 90:
+                self.rotation = 90 + self.rotation
+            elif self.rotation <= 180:
+                self.rotation = 180 + (self.rotation - 90)
+            elif self.rotation <= 270:
+                self.rotation = 270 + (self.rotation - 90)
+            elif self.rotation <= 360:
+                self.rotation = (self.rotation - 360) + 180
+
+            # Be an actual rotation
+            if self.rotation >= 360:
                 self.rotation -= 360
+            if self.rotation < 0:
+                self.rotation += 360
+
             self.anglePosChange()
             self.update()
             self.health -= 1
