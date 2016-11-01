@@ -85,5 +85,7 @@
                 ]
             ]
         }
-    ]
+    ],
+    "PlayerOneStart" : [420, 300, 90],
+    "PlayerTwoStart" : [300, 420, 180]
 }

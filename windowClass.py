@@ -16,6 +16,7 @@ class Window:
 
 
         self.clock = pygame.time.Clock()
+        self.level = 'levelThree'
 
         # Create the window itself
         self.window = pygame.display.set_mode(dimensions)
@@ -42,6 +43,9 @@ class Window:
         # Variable to see whether or not to regen walls
         self.tick = True
         self.frame = 0
+
+    def levelPath(self):
+        return currentDirectory + '\\Data\\Levels\\{}.json'.format(self.level)
 
     # Change the title of the window
     def changeCaption(self, title="Blank"):
@@ -84,7 +88,7 @@ class Window:
         self.wallGroup.draw(self.window)
         self.bulletGroup.draw(self.window)
         self.playerGroup.draw(self.window)
-        self.makeFont(str(hex(self.frame)).upper()[2:], [0,0])
+        self.makeFont(str(hex(self.frame)).upper()[2:], [0,0]) # Puts the hex in the topleft
 
         pygame.display.flip()
         self.clock.tick(fpsCounter)
@@ -117,8 +121,17 @@ class Window:
             if i.deleteFlag == True:
                 i.kill()
 
-        # self.playerOne.checkExplode(window.wallGroup)
-        # self.playerTwo.checkExplode(window.wallGroup)
+        self.playerOne.bulletCollide(self.bulletGroup)
+        self.playerTwo.bulletCollide(self.bulletGroup)
+
+
+    def playerStartupLocations(self, pathToLevel):
+        with open(pathToLevel) as a:
+            jsonified = json.load(a)
+        self.playerOne.setLocation([jsonified['PlayerOneStart'][0], jsonified['PlayerOneStart'][1]])
+        self.playerTwo.setLocation([jsonified['PlayerTwoStart'][0], jsonified['PlayerTwoStart'][1]])
+        self.playerOne.rotation = jsonified['PlayerOneStart'][2]
+        self.playerTwo.rotation = jsonified['PlayerTwoStart'][2]
 
 
     def do(self):
