@@ -21,6 +21,17 @@ class Window:
         self.tempGroup = pygame.sprite.Group()
         self.frame = 0
 
+        # Make so you can't leave the map
+        az = []
+        for i in range(5):
+            d = dimensions
+            az.append( Wall(topLeft=[-5, 0], dimensions=[5, d[1]], colour=[0, 0, 0]) )
+            az.append( Wall(topLeft=[d[0], 0], dimensions=[5, d[1]], colour=[0, 0, 0]) )
+            az.append( Wall(topLeft=[0, -5], dimensions=[d[0], 5], colour=[0, 0, 0]) )
+            az.append( Wall(topLeft=[0, d[1]], dimensions=[d[0], 5], colour=[0, 0, 0]) )
+        for i in az:
+            self.wallGroup.add(i)
+
         # Store the last click point
         self.lastClick = None
 
