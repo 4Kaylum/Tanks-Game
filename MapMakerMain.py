@@ -1,6 +1,7 @@
 import pygame
 import json
 import tkinter
+from gameConstants import *
 from tkinter import filedialog
 
 
@@ -35,25 +36,45 @@ class Window:
         # Store the last click point
         self.lastClick = None
 
+        # Store the tank objects
+        self.tankGroup = pygame.sprite.Group()
+        self.tanks = [None, None]
+        self.place = 1
+
     # Save the shizzay
     def saveWindow(self):
+
+        # Get strings to write
+        toWriteOut = self.boxesToFile()
+        if None not in self.tanks:
+            tankOne = self.tanks[0].topLeft
+            tankTwo = self.tanks[1].topLeft
+            toWriteOut['PlayerOneStart'] = [tankOne[0], tankOne[1], 0]
+            toWriteOut['PlayerTwoStart'] = [tankTwo[0], tankTwo[1], 0]
+        else:
+            print("No tanks placed - will cause errors in game")
+
+        # Save file dialogue
         root = tkinter.Tk()
         root.withdraw()
         f = tkinter.filedialog.asksaveasfile(mode='w', defaultextension=".json")
         if f is None:
             return 
-        f.write(self.boxesToFile())
+
+        # Write out
+        f.write(json.dumps(toWriteOut,indent=4).replace('\t','    ')) # tabs to spaces~
         f.close()
 
     def boxesToFile(self):
         toOut = {"TileSet":[]}
         for i in self.wallGroup:
             toOut['TileSet'].append({"Vertices":[i.topLeft,i.dimensions],"Colour":i.colour})
-        return json.dumps(toOut,indent=4)
+        return toOut
 
     # Check if the player clicked the window
     def checkClick(self):
         for e in pygame.event.get():
+            # Left click
             if e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
                 if self.lastClick == None:
                     self.lastClick = pygame.mouse.get_pos()
@@ -103,12 +124,33 @@ class Window:
                 self.saveWindow()
                 pygame.quit()
                 return False
+
+
+            # Right click
+            if e.type == pygame.MOUSEBUTTONDOWN and e.button == 3:
+
+                # Only place two tanks
+                if self.place > 2:
+                    return True
+
+                # Get position and dimensions
+                placement = pygame.mouse.get_pos()
+                dimensions = [playerSize, playerSize]
+
+                # Create object
+                self.tanks[self.place-1] = Wall(topLeft=placement, dimensions=dimensions, colour=playerColour[self.place-1])
+                self.tankGroup.add(self.tanks[self.place-1])
+
+                # Increment the tank ID of placed
+                self.place += 1
+
         return True
 
     def drawAll(self):
         self.window.blit(self.background.image,[0,0])
         self.wallGroup.draw(self.window)
         self.tempGroup.draw(self.window)
+        self.tankGroup.draw(self.window)
 
         pygame.display.flip()
         self.clock.tick(30)

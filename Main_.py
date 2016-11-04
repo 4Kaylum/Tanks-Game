@@ -15,7 +15,7 @@ if __name__ == '__main__':
     window = Window()
     window.playerOne.readSettings(currentDirectory + '\\Data\\settings.json')
     window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
-    window.setLevel(levelName='doopy',randomLevel=False)
+    window.setLevel(levelName='thisIsAMapMakerTest',randomLevel=False)
 
     # Run the game while the quit button hasn't been pressed
     while window.checkQuit():
