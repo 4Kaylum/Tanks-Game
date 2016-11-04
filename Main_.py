@@ -25,8 +25,18 @@ if __name__ == '__main__':
             window.playerStartupLocations(window.levelPath())
 
         window.do()
+
+        frameString = str(hex(window.frame)).upper()[2:]
+
+        playerOne = window.playerOne.rect.center
+        playerOneRotation = window.playerOne.rotation
+
+        playerTwo = window.playerTwo.rect.center
+        playerTwoRotation = window.playerTwo.rotation
         
-        print(str(hex(window.frame)).upper()[2:]+' [P1 '+str([str(window.playerOne.rect.center[0]),str(window.playerOne.rect.center[1]),str(window.playerOne.rotation)])+'] [P2 '+str([str(window.playerTwo.rect.center[0]),str(window.playerTwo.rect.center[1]),str(window.playerTwo.rotation)])+']')
+        print('{} [P1 [{}, {}], {}] [P2 [{}, {}], {}]'.format(frameString, \
+            playerOne[0], playerOne[1], playerOneRotation, \
+            playerTwo[0], playerTwo[1], playerTwoRotation))
 
     # Out of the loop; kill the program
     pygame.quit()
