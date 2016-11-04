@@ -1,6 +1,9 @@
 import pygame
 # Import the JSON library to be able to read stored data
 import json
+# Import OS and random to get random levels
+from os import listdir
+from random import choice
 
 from wallClass import *
 from playerClass import *
@@ -44,6 +47,18 @@ class Window:
         self.tick = True
         self.frame = 0
 
+        # Scoreboard
+        self.score = [0, 0]
+
+    def setLevel(self, *, levelName='', randomLevel=True):
+        if levelName == '':
+            levelName = self.level
+        if randomLevel:
+            z = listdir(currentDirectory + '\\Data\\Levels\\')
+            levelName = choice(z)[:-5] # Cut off the .json
+        self.level = levelName
+        self.tick = True
+    
     def levelPath(self):
         return currentDirectory + '\\Data\\Levels\\{}.json'.format(self.level)
 
