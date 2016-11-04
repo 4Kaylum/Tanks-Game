@@ -86,6 +86,51 @@ class Bullet(pygame.sprite.Sprite):
                 self.rotation = 270 + (self.rotation - 90)
             elif self.rotation <= 360:
                 self.rotation = (self.rotation - 360) + 180
+            
+            # elif self.rotation < 90 and hitList[0].rect.x > self.rect.x: # Bullet hit left wall at r<90 deg angle
+            #     self.rotation = self.rotation + 270
+            # elif self.rotation < 90: # Bullet hit top wall at r<90 deg angle
+            #     self.rotation = self.rotation + 90
+            # elif self.rotation < 180 and hitList[0].rect.y < self.rect.y: # Bullet hit left wall at r<180 deg angle
+            #     self.rotation = (self.rotation - 90) + 180
+            # elif self.rotation < 180: # Bullet hit bottom wall at r<180 deg angle
+            #     self.rotation = 90 - (90 - self.rotation)
+            # elif self.rotation < 270 and hitList[0].rect.y < self.rect.y: # Bullet hit right wall at r<270 deg angle
+            #     self.rotation = 180 - (self.rotation - 180)
+            # elif self.rotation < 270: # Bullet hit bottom wall at r<270 deg angle
+            #     self.rotation = self.rotation - 270
+            # elif self.rotation < 360 and hitList[0].rect.x < self.rect.x: # Bullet hit right wall at r<360 deg angle
+            #     self.rotation = 90 - (self.rotation - 270)
+            # elif self.rotation < 360: # Bullet hit top wall at r<360 deg angle
+            #     self.rotation = 180 + (90 - self.rotation)
+
+            # elif self.rotation < 90 and hitList[0].rect.right >= self.rect.x: # Hit left wall at r<90
+            #     print('a')
+            #     self.rotation = self.rotation + 270
+            # elif self.rotation < 90: # Hit top wall at r<90
+            #     print('b')
+            #     self.rotation = self.rotation + 90
+            # elif self.rotation < 180 and hitList[0].rect.top <= self.rect.y: # Hit bottom wall at r<180
+            #     print('c')
+            #     self.rotation = 90 - (90 - self.rotation)
+            # elif self.rotation < 180: # Hit left wall at r<180
+            #     print('d')
+            #     self.rotation = (self.rotation - 90) + 180
+            # elif self.rotation < 270 and hitList[0].rect.bottom <= self.rect.y: # Hit bottom wall at r<270
+            #     print('e')
+            #     pass
+            # elif self.rotation < 270: # Hit right wall at r<270
+            #     print('f')
+            #     self.rotation = 180 - (self.rotation - 180)
+            # elif self.rotation < 360 and hitList[0].rect.left <= self.rect.x: # Hit right wall at r<360
+            #     print('g')
+            #     self.rotation = self.rotation - 270
+            # elif self.rotation < 360: # Hit top wall at r<360
+            #     print('h')
+            #     self.rotation = 180 + (90 - self.rotation)
+
+
+
 
             # Be an actual rotation
             if self.rotation >= 360:
@@ -94,5 +139,6 @@ class Bullet(pygame.sprite.Sprite):
                 self.rotation += 360
 
             self.anglePosChange()
+            self.update()
             self.update()
             self.health -= 1
