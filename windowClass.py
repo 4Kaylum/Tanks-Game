@@ -58,6 +58,7 @@ class Window:
             levelName = choice(z)[:-5] # Cut off the .json
         self.level = levelName
         self.tick = True
+        print('DEBUG [Loading level {}]'.format(levelName))
     
     def levelPath(self):
         return currentDirectory + '\\Data\\Levels\\{}.json'.format(self.level)
@@ -65,6 +66,7 @@ class Window:
     # Change the title of the window
     def changeCaption(self, title="Blank"):
         self.window.set_caption(title)
+        print('DEBUG [Changing window name {}]'.format(title))
 
     # Check if the player clicked quit
     def checkQuit(self):
@@ -98,12 +100,12 @@ class Window:
             self.wallGroup.add(temp)
 
     # Draw all sprites to screen
-    def drawAll(self):
+    def drawAll(self, drawFPS=True):
         self.window.blit(self.background.image,[0,0])
         self.wallGroup.draw(self.window)
         self.bulletGroup.draw(self.window)
         self.playerGroup.draw(self.window)
-        self.makeFont(str(hex(self.frame)).upper()[2:], [0,0]) # Puts the hex in the topleft
+        self.makeFont(str(hex(self.frame)).upper()[2:], [0,0]) if drawFPS else None # Puts the hex in the topleft
 
         pygame.display.flip()
         self.clock.tick(fpsCounter)
@@ -150,11 +152,13 @@ class Window:
         self.playerTwo.rotation = jsonified['PlayerTwoStart'][2]
 
 
-    def do(self):
+    def do(self, drawFPS=True):
         self.playerOne.checkKeypress()
         self.playerTwo.checkKeypress()
         self.addBullets()
         self.bulletGroup.update()
         self.collisionHell()
-        self.drawAll()
+        self.playerOne.grace -= 1
+        self.playerTwo.grace -= 1
+        self.drawAll(drawFPS)
 

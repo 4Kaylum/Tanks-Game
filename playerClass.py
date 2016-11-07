@@ -45,6 +45,12 @@ class Player(pygame.sprite.Sprite):
 
         # Keep score for the user
         self.score = 0
+        self.grace = 0
+
+
+    # Make print(player) mean something
+    def __str__(self):
+        return '[P{0} [{1[0]}, {1[0]}] {2}]'.format(self.playerNumber, self.rect.center, self.rotation)
 
 
     # Set a player's location depending on the map
@@ -185,6 +191,7 @@ class Player(pygame.sprite.Sprite):
     def bulletCollide(self, bulletGroup):
         # Check what it's hit with - gives list of images
         hitList = pygame.sprite.spritecollide(self, bulletGroup, False)
-        if len(hitList) > 0:
-            print("ouch {}".format(self.playerNumber))
+        if len(hitList) > 0 and self.grace <= 0:
+            self.score -= 1
+            self.grace = gracePeriod
 

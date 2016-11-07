@@ -15,7 +15,7 @@ if __name__ == '__main__':
     window = Window()
     window.playerOne.readSettings(currentDirectory + '\\Data\\settings.json')
     window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
-    window.setLevel(levelName='thisIsAMapMakerTest',randomLevel=False)
+    window.setLevel(levelName=loadLevel,randomLevel=False) if loadLevel != '' else window.setLevel(randomLevel=True)
 
     # Run the game while the quit button hasn't been pressed
     while window.checkQuit():
@@ -29,15 +29,7 @@ if __name__ == '__main__':
 
         frameString = str(hex(window.frame)).upper()[2:]
 
-        playerOne = window.playerOne.rect.center
-        playerOneRotation = window.playerOne.rotation
-
-        playerTwo = window.playerTwo.rect.center
-        playerTwoRotation = window.playerTwo.rotation
-        
-        print('{} [P1 [{}, {}], {}] [P2 [{}, {}], {}]'.format(frameString, \
-            playerOne[0], playerOne[1], playerOneRotation, \
-            playerTwo[0], playerTwo[1], playerTwoRotation))
+        print('{} {} {}'.format(frameString, window.playerOne, window.playerTwo))
 
     # Out of the loop; kill the program
     pygame.quit()
