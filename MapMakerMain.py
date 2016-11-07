@@ -1,9 +1,24 @@
-import pygame
+import sys
+if not sys.version_info[:2] == (3, 5):
+    raise Exception("I need Python version 3.5 to run properly.")
+    sys.exit()
+try:
+    import pygame
+except ImportError:
+    import pip
+    from urllib.request import urlretrieve
+    url = 'http://www.lfd.uci.edu/~gohlke/pythonlibs/dp2ng7en/pygame-1.9.2b1-cp35-cp35m-win_amd64.whl'
+    pip.main(['install', url])
+    import pygame
 import json
 import tkinter
 from gameConstants import *
-from tkinter import filedialog
+from tkinter import filedialog, colorchooser
+# from tkinter.colorchooser import *
 
+# Make this so I can be rid of the tkinter windows
+root = tkinter.Tk()
+root.withdraw()
 
 class Window:
 
@@ -39,25 +54,28 @@ class Window:
         # Store the tank objects
         self.tankGroup = pygame.sprite.Group()
         self.tanks = [None, None]
-        self.place = 1
 
     # Save the shizzay
     def saveWindow(self):
 
         # Get strings to write
         toWriteOut = self.boxesToFile()
-        if None not in self.tanks:
+        errorFlag = 0
+        try:
             tankOne = self.tanks[0].topLeft
-            tankTwo = self.tanks[1].topLeft
             toWriteOut['PlayerOneStart'] = [tankOne[0], tankOne[1], 0]
+        except:
+            errorFlag += 1
+        try:
+            tankTwo = self.tanks[1].topLeft
             toWriteOut['PlayerTwoStart'] = [tankTwo[0], tankTwo[1], 0]
-        else:
-            print("No tanks placed - will cause errors in game")
+        except:
+            errorFlag += 2
+        if errorFlag:
+            print("Tank not placed ::{}::".format(errorFlag))
 
         # Save file dialogue
-        root = tkinter.Tk()
-        root.withdraw()
-        f = tkinter.filedialog.asksaveasfile(mode='w', defaultextension=".json")
+        f = filedialog.asksaveasfile(mode='w', defaultextension=".json")
         if f is None:
             return 
 
@@ -126,23 +144,34 @@ class Window:
                 return False
 
 
-            # Right click
-            if e.type == pygame.MOUSEBUTTONDOWN and e.button == 3:
+            # Placement clicks
+            if e.type == pygame.MOUSEBUTTONDOWN and e.button in [2, 3]:
 
-                # Only place two tanks
-                if self.place > 2:
-                    return True
+                try:
+                    self.tanks[{2:0,3:1}[e.button]].kill()
+                except Exception as f:
+                    print(f)
+                    print(repr(f))
 
                 # Get position and dimensions
                 placement = pygame.mouse.get_pos()
                 dimensions = [playerSize, playerSize]
 
                 # Create object
-                self.tanks[self.place-1] = Wall(topLeft=placement, dimensions=dimensions, colour=playerColour[self.place-1])
-                self.tankGroup.add(self.tanks[self.place-1])
+                self.tanks[{2:0,3:1}[e.button]] = Wall(topLeft=placement, dimensions=dimensions, colour=playerColour[{2:0,3:1}[e.button]])
+                self.tankGroup.add(self.tanks[{2:0,3:1}[e.button]])
 
-                # Increment the tank ID of placed
-                self.place += 1
+            #button will be set to 4 when the wheel is rolled up, and to button 5 when the whe
+            if e.type == pygame.MOUSEBUTTONDOWN and e.button in [4, 5]:
+                collider = None
+                for i in self.wallGroup:
+                    collideWalls = i.rect.collidepoint(pygame.mouse.get_pos())
+                    if collideWalls != 0:
+                        collider = i
+                if collider:
+                    f = colorchooser.askcolor((0,0,0))
+                    f = f[1][1:]
+                    collider.setColour(f)
 
         return True
 
@@ -181,6 +210,25 @@ class Wall(pygame.sprite.Sprite):
         self.rect.y = self.topLeft[1]
         self.dimensions = dimensions
         self.colour = colour
+
+    def colourGet(self, returnType='hex'):
+        c = self.colour 
+        q = hex(c[0])[2:] + hex(c[1])[2:] + hex(c[2])[2:]
+        if returnType == 'hex':
+            return q
+        elif returnType == 'int':
+            return int(q, 16)
+
+    def setColour(self, colourInput):
+        if type(colourInput) == type([]):
+            self.colour = colourInput
+        if type(colourInput) == type(0):
+            colourInput = hex(colourInput)[2:]
+        if type(colourInput) == type(''):
+            hexList = [colourInput[i:i+2] for i in range(0, len(colourInput), 2)]
+            rgbList = [int(i, 16) for i in hexList]
+            self.colour = rgbList
+        self.image.fill(self.colour)
 
 
 window = Window()

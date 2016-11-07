@@ -6,8 +6,6 @@
 		{"Vertices":[[0,600],[1500,60]],"Colour":[255,0,255]},
 		{"Vertices":[[0,0],[50,500]],"Colour":[50,50,50]}
 	],
-	"Name" : "Level One",
-	"ID" : 0,
 	"PlayerOneStart" : [200,200,0],
 	"PlayerTwoStart" : [600,600,0]
 }
