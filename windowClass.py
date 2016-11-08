@@ -44,11 +44,14 @@ class Window:
         self.playerGroup.add(self.playerTwo)
 
         # Variable to see whether or not to regen walls
-        self.tick = True
         self.frame = 0
 
         # Scoreboard
         self.score = [0, 0]
+
+        # Set the window state
+        # {0: Title, 1: Playing, 2: Pause, 3: Settings, 4: Make level}
+        self.windowState = 0
 
     def setLevel(self, *, levelName='', randomLevel=True):
         if levelName == '':
@@ -63,6 +66,10 @@ class Window:
     def levelPath(self):
         return currentDirectory + '\\Data\\Levels\\{}.json'.format(self.level)
 
+    def getEvents(self):
+        self.events = pygame.event.get()
+        return self.events
+
     # Change the title of the window
     def changeCaption(self, title="Blank"):
         self.window.set_caption(title)
@@ -70,11 +77,15 @@ class Window:
 
     # Check if the player clicked quit
     def checkQuit(self):
-        for e in pygame.event.get():
+        for e in self.events:
             if e.type == pygame.QUIT:
                 pygame.quit()
                 return False
         return True
+
+    # Fill the window with white
+    def clean(self):
+        self.window.fill([255, 255, 255])
 
     # Create and draw the walls onto the canvas
     def makeWalls(self, level):
@@ -100,14 +111,16 @@ class Window:
             self.wallGroup.add(temp)
 
     # Draw all sprites to screen
-    def drawAll(self, drawFPS=True):
-        self.window.blit(self.background.image,[0,0])
+    def drawAll(self, *, drawFPS=True, drawPlayers=True, drawPlayerData=True, clear=True, update=True):
+        self.window.blit(self.background.image,[0,0]) if clear else None
         self.wallGroup.draw(self.window)
-        self.bulletGroup.draw(self.window)
-        self.playerGroup.draw(self.window)
+        self.bulletGroup.draw(self.window) if drawPlayers else None
+        self.playerGroup.draw(self.window) if drawPlayers else None
         self.makeFont(str(hex(self.frame)).upper()[2:], [0,0]) if drawFPS else None # Puts the hex in the topleft
+        self.makeFont(str(self.playerOne.score),20*self.playerOne.playerNumber) if drawPlayerData else None
+        self.makeFont(str(self.playerTwo.score),20*self.playerTwo.playerNumber) if drawPlayerData else None
 
-        pygame.display.flip()
+        pygame.display.flip() if update else None
         self.clock.tick(fpsCounter)
 
     # Check if the tanks generated any bullets that need to be added
@@ -120,10 +133,12 @@ class Window:
             self.playerTwo.bullet = None
         
     # Add a font to the screen
-    def makeFont(self, text, location, size=36):
+    def makeFont(self, text, location, *, colour=[10, 10, 10], size=36):
         font = pygame.font.Font(None, size)
-        text = font.render(text, 1, (10, 10, 10))
+        text = font.render(text, 1, colour)
         textpos = text.get_rect()
+        if type(location) == int:
+            location = [0, location]
         self.window.blit(text, location)
 
     # Oh god there are so many items save me
@@ -160,5 +175,5 @@ class Window:
         self.collisionHell()
         self.playerOne.grace -= 1
         self.playerTwo.grace -= 1
-        self.drawAll(drawFPS)
+        self.drawAll(drawFPS=drawFPS)
 
