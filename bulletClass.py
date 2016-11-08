@@ -17,8 +17,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         # Set it to the right place
-        self.rect.x = parent.rect.x
-        self.rect.y = parent.rect.y
+        self.rect.center = parent.rect.center
 
         # Make sure it GOES to the right place when moving
         self.transform = 0

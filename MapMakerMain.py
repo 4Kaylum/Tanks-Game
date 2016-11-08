@@ -1,7 +1,7 @@
 import sys
-if not sys.version_info[:2] == (3, 5):
-    raise Exception("I need Python version 3.5 to run properly.")
-    sys.exit()
+# if not sys.version_info[:2] == (3, 5):
+#     raise Exception("I need Python version 3.5 to run properly.")
+#     sys.exit()
 try:
     import pygame
 except ImportError:

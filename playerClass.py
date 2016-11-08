@@ -70,15 +70,7 @@ class Player(pygame.sprite.Sprite):
         with open(jsonFile) as a:
             settings = json.load(a)
         self.buttons = settings['Player{}'.format(self.playerNumber)]
-
-    # Check if the player clicked quit
-    def checkQuit(self):
-        for e in pygame.event.get():
-            if e.type == pygame.QUIT:
-                pygame.quit()
-                return False
-        return True
-
+        
     # Check the assigned buttons to see if there's any keypresses
     def checkKeypress(self):
         x = pygame.key.get_pressed()
@@ -113,6 +105,7 @@ class Player(pygame.sprite.Sprite):
             self.lastShot = self.parent.frame
             if x[self.buttons['fire']]:
                 self.bullet = Bullet(self)
+                self.grace = gracePeriod
 
 
     # Get X/Y change values from an angle
@@ -192,6 +185,6 @@ class Player(pygame.sprite.Sprite):
         # Check what it's hit with - gives list of images
         hitList = pygame.sprite.spritecollide(self, bulletGroup, False)
         if len(hitList) > 0 and self.grace <= 0:
+            print('DEBUG [Player {} hit]'.format(self.playerNumber))
             self.score -= 1
             self.grace = gracePeriod
-
