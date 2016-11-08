@@ -24,14 +24,18 @@ if __name__ == '__main__':
 
         # Make so you can quit
         if not window.checkQuit():
-            break
+            if window.windowState == 1:
+                window.windowState = 0
+            else:
+                break
 
         # Increment frame count
         window.frame += 1
 
         # Clean the map
-        window.clean()
-        window.wallGroup = pygame.sprite.Group()
+        if window.windowState not in [1, 4]:
+            window.clean()
+            window.wallGroup = pygame.sprite.Group()
 
         # If playing or generating the level
         if window.windowState in [1, 4]:
@@ -48,6 +52,7 @@ if __name__ == '__main__':
                 # Generate the level
                 window.makeWalls(window.levelPath())
                 window.playerStartupLocations(window.levelPath())
+
 
             # Do all the movement and collision and stuff
             window.do()

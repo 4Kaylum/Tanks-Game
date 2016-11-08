@@ -62,6 +62,7 @@ class Window:
         self.level = levelName
         self.tick = True
         print('DEBUG [Loading level {}]'.format(levelName))
+        self.changeCaption(levelName)
     
     def levelPath(self):
         return currentDirectory + '\\Data\\Levels\\{}.json'.format(self.level)
@@ -72,14 +73,14 @@ class Window:
 
     # Change the title of the window
     def changeCaption(self, title="Blank"):
-        self.window.set_caption(title)
+        pygame.display.set_caption(title)
         print('DEBUG [Changing window name {}]'.format(title))
 
     # Check if the player clicked quit
     def checkQuit(self):
         for e in self.events:
             if e.type == pygame.QUIT:
-                pygame.quit()
+                # pygame.quit()
                 return False
         return True
 
