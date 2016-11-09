@@ -184,7 +184,11 @@ class Player(pygame.sprite.Sprite):
     def bulletCollide(self, bulletGroup):
         # Check what it's hit with - gives list of images
         hitList = pygame.sprite.spritecollide(self, bulletGroup, False)
+        if self.grace > 0:
+            return
         if len(hitList) > 0 and self.grace <= 0:
             print('DEBUG [Player {} hit]'.format(self.playerNumber))
             self.score -= 1
             self.grace = gracePeriod
+        for i in hitList:
+            i.kill()

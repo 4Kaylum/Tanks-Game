@@ -1,7 +1,7 @@
 import pygame
 from wallClass import *
 from gameConstants import *
-import math
+from math import sin, cos, radians, fabs
 
 class Bullet(pygame.sprite.Sprite):
 
@@ -29,15 +29,6 @@ class Bullet(pygame.sprite.Sprite):
         self.deleteFlag = False
 
 
-    # Where it moves each frame tick
-    def update(self):
-        self.rect.x += self.transform[0]
-        self.rect.y += self.transform[1]
-        self.lifetime -= 1
-        if self.health <= 0 or self.lifetime <= 0:
-            self.deleteFlag = True
-
-
     # Copied the code from player to work out direction
     def anglePosChange(self,forward=True):
         r_raw = self.rotation
@@ -61,83 +52,46 @@ class Bullet(pygame.sprite.Sprite):
         r_x = 90 - r_y
         forwardMultiplier = {True:1,False:-1}[forward]
 
-        X_c = multiplier[0] * forwardMultiplier * bulletMovementAmount * math.sin(math.radians(r_raw))
-        Y_c = multiplier[1] * forwardMultiplier * bulletMovementAmount * math.cos(math.radians(r_raw))
+        X_c = multiplier[0] * forwardMultiplier * bulletMovementAmount * sin(radians(r_raw))
+        Y_c = multiplier[1] * forwardMultiplier * bulletMovementAmount * cos(radians(r_raw))
 
         self.transform = [X_c, Y_c]
+
+
+    # Where it moves each frame tick
+    def update(self):
+        # self.rect.x += self.transform[0]
+        # self.rect.y += self.transform[1]
+        # self.checkCollide([self.transform[0], 0])
+        # self.checkCollide([0, self.transform[1]])
+        # self.checkCollide(self.transform)
+
+        self.lifetime -= 1
+        if self.health <= 0 or self.lifetime <= 0:
+            self.deleteFlag = True
+
+    # Move by an amount
+    def moveBy(self, moveAmount):
+        self.rect.x += moveAmount[0]
+        self.rect.y += moveAmount[1]
 
 
     # Check collisions of walls
     def checkCollide(self, wallGroup):
         # Check what it's hit with - gives list of images
+        moveAmount = self.transform
+        self.moveBy([moveAmount[0], 0])
         hitList = pygame.sprite.spritecollide(self, wallGroup, False)
         # Go through each one, find it's bound
         if len(hitList) > 0:
-
-            # Bounce correctly
-            if self.rotation in [0, 90, 180, 270, 360]:
-                self.rotation += 180
-            elif self.rotation < 90:
-                self.rotation = 90 + self.rotation
-            elif self.rotation <= 180:
-                self.rotation = 180 + (self.rotation - 90)
-            elif self.rotation <= 270:
-                self.rotation = 270 + (self.rotation - 90)
-            elif self.rotation <= 360:
-                self.rotation = (self.rotation - 360) + 180
-            
-            # elif self.rotation < 90 and hitList[0].rect.x > self.rect.x: # Bullet hit left wall at r<90 deg angle
-            #     self.rotation = self.rotation + 270
-            # elif self.rotation < 90: # Bullet hit top wall at r<90 deg angle
-            #     self.rotation = self.rotation + 90
-            # elif self.rotation < 180 and hitList[0].rect.y < self.rect.y: # Bullet hit left wall at r<180 deg angle
-            #     self.rotation = (self.rotation - 90) + 180
-            # elif self.rotation < 180: # Bullet hit bottom wall at r<180 deg angle
-            #     self.rotation = 90 - (90 - self.rotation)
-            # elif self.rotation < 270 and hitList[0].rect.y < self.rect.y: # Bullet hit right wall at r<270 deg angle
-            #     self.rotation = 180 - (self.rotation - 180)
-            # elif self.rotation < 270: # Bullet hit bottom wall at r<270 deg angle
-            #     self.rotation = self.rotation - 270
-            # elif self.rotation < 360 and hitList[0].rect.x < self.rect.x: # Bullet hit right wall at r<360 deg angle
-            #     self.rotation = 90 - (self.rotation - 270)
-            # elif self.rotation < 360: # Bullet hit top wall at r<360 deg angle
-            #     self.rotation = 180 + (90 - self.rotation)
-
-            # elif self.rotation < 90 and hitList[0].rect.right >= self.rect.x: # Hit left wall at r<90
-            #     print('a')
-            #     self.rotation = self.rotation + 270
-            # elif self.rotation < 90: # Hit top wall at r<90
-            #     print('b')
-            #     self.rotation = self.rotation + 90
-            # elif self.rotation < 180 and hitList[0].rect.top <= self.rect.y: # Hit bottom wall at r<180
-            #     print('c')
-            #     self.rotation = 90 - (90 - self.rotation)
-            # elif self.rotation < 180: # Hit left wall at r<180
-            #     print('d')
-            #     self.rotation = (self.rotation - 90) + 180
-            # elif self.rotation < 270 and hitList[0].rect.bottom <= self.rect.y: # Hit bottom wall at r<270
-            #     print('e')
-            #     pass
-            # elif self.rotation < 270: # Hit right wall at r<270
-            #     print('f')
-            #     self.rotation = 180 - (self.rotation - 180)
-            # elif self.rotation < 360 and hitList[0].rect.left <= self.rect.x: # Hit right wall at r<360
-            #     print('g')
-            #     self.rotation = self.rotation - 270
-            # elif self.rotation < 360: # Hit top wall at r<360
-            #     print('h')
-            #     self.rotation = 180 + (90 - self.rotation)
-
-
-
-
-            # Be an actual rotation
-            if self.rotation >= 360:
-                self.rotation -= 360
-            if self.rotation < 0:
-                self.rotation += 360
-
-            self.anglePosChange()
-            self.update()
-            self.update()
+            self.transform[0] = self.transform[0] * -1
+            self.moveBy([moveAmount[0], 0])
             self.health -= 1
+
+        self.moveBy([0, moveAmount[1]])
+        hitList = pygame.sprite.spritecollide(self, wallGroup, False)
+        if len(hitList) > 0:
+            self.transform[1] = self.transform[1] * -1
+            self.moveBy([0, moveAmount[1]])
+            self.health -= 1
+
