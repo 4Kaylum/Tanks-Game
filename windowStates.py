@@ -28,6 +28,7 @@ def titleScreen(window):
     # Clear the window
     window.clean()
     window.wallGroup = pygame.sprite.Group()
+    window.bulletGroup = pygame.sprite.Group()
     
     # Create the clickbox
     window.wallGroup.add(Wall(topLeft=[50, 50], dimensions=[300, 50], colour=[0,0,0], name='PlayButton'))
