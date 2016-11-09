@@ -41,10 +41,10 @@ class Window:
         az = []
         for i in range(5):
             d = dimensions
-            az.append( Wall(topLeft=[-5, 0], dimensions=[5, d[1]], colour=[0, 0, 0]) )
-            az.append( Wall(topLeft=[d[0], 0], dimensions=[5, d[1]], colour=[0, 0, 0]) )
-            az.append( Wall(topLeft=[0, -5], dimensions=[d[0], 5], colour=[0, 0, 0]) )
-            az.append( Wall(topLeft=[0, d[1]], dimensions=[d[0], 5], colour=[0, 0, 0]) )
+            az.append( Wall(topLeft=[-20, 0], dimensions=[20, d[1]], colour=[0, 0, 0]) )
+            az.append( Wall(topLeft=[d[0], 0], dimensions=[20, d[1]], colour=[0, 0, 0]) )
+            az.append( Wall(topLeft=[0, -20], dimensions=[d[0], 20], colour=[0, 0, 0]) )
+            az.append( Wall(topLeft=[0, d[1]], dimensions=[d[0], 20], colour=[0, 0, 0]) )
         for i in az:
             self.wallGroup.add(i)
 
@@ -158,20 +158,32 @@ class Window:
                 dimensions = [playerSize, playerSize]
 
                 # Create object
-                self.tanks[{2:0,3:1}[e.button]] = Wall(topLeft=placement, dimensions=dimensions, colour=playerColour[{2:0,3:1}[e.button]])
+                self.tanks[{2:0,3:1}[e.button]] = Wall(tank=True, topLeft=placement, dimensions=dimensions, colour=playerColour[{2:0,3:1}[e.button]])
                 self.tankGroup.add(self.tanks[{2:0,3:1}[e.button]])
 
             #button will be set to 4 when the wheel is rolled up, and to button 5 when the whe
-            if e.type == pygame.MOUSEBUTTONDOWN and e.button in [4, 5]:
+            if e.type == pygame.MOUSEBUTTONDOWN and e.button in [4]:
                 collider = None
                 for i in self.wallGroup:
                     collideWalls = i.rect.collidepoint(pygame.mouse.get_pos())
                     if collideWalls != 0:
                         collider = i
                 if collider:
-                    f = colorchooser.askcolor((0,0,0))
-                    f = f[1][1:]
-                    collider.setColour(f)
+                    try:
+                        f = colorchooser.askcolor((127,127,127))
+                        f = f[1][1:]
+                        collider.setColour(f)
+                    except TypeError:
+                        pass
+
+            if e.type == pygame.MOUSEBUTTONDOWN and e.button in [5]:
+                collider = None
+                for i in self.wallGroup:
+                    collideWalls = i.rect.collidepoint(pygame.mouse.get_pos())
+                    if collideWalls != 0:
+                        collider = i
+                if collider:
+                    collider.kill()
 
         return True
 
@@ -191,7 +203,7 @@ class Wall(pygame.sprite.Sprite):
 
     # To be called when the class is created
     # Will be created at the beginning of each level
-    def __init__(self, *, topLeft=[0, 0], dimensions=[0, 0], colour=[255, 255, 255]):
+    def __init__(self, *, topLeft=[0, 0], dimensions=[0, 0], colour=[255, 255, 255], tank=False):
         """Build a great wall... and make the class pay for it!"""
         super().__init__()
 
@@ -205,9 +217,13 @@ class Wall(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         # Store its top left
-        self.topLeft = topLeft
-        self.rect.x = self.topLeft[0]
-        self.rect.y = self.topLeft[1]
+        if not tank:
+            self.topLeft = topLeft
+            self.rect.x = self.topLeft[0]
+            self.rect.y = self.topLeft[1]
+        else:
+            self.rect.center = topLeft
+            self.topLeft = [self.rect.left, self.rect.top]
         self.dimensions = dimensions
         self.colour = colour
 

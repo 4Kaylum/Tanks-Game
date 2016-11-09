@@ -1,9 +1,0 @@
-{
-	"TileSet" : [
-	],
-	"Name" : "Blank Level",
-	"ID" : 0,
-	"PlayerOneStart" : [0,0,0],
-	"PlayerTwoStart" : [0,0,0]
-}
-
