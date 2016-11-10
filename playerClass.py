@@ -4,6 +4,7 @@ from time import time
 import math
 from gameConstants import *
 import json
+from controllerClass import *
 
 # Create the player class
 class Player(pygame.sprite.Sprite):
@@ -18,6 +19,7 @@ class Player(pygame.sprite.Sprite):
 
         # Read buttons from the settings
         self.buttons = {}
+        self.controller = None
 
         # Set change variables - these will be checked before moving the player to make sure
         # that there are no collisions
@@ -73,39 +75,51 @@ class Player(pygame.sprite.Sprite):
         
     # Check the assigned buttons to see if there's any keypresses
     def checkKeypress(self):
-        x = pygame.key.get_pressed()
+        if not self.controller:
+            x = pygame.key.get_pressed()
 
-        # Change rotation value based on LR values
-        if x[self.buttons['right']]:
-            self.rotation -= playerRotationAmount
-        if x[self.buttons['left']]:
-            self.rotation += playerRotationAmount
-        self.anglePosChange(True, False)
+            # Change rotation value based on LR values
+            if x[self.buttons['right']]:
+                self.rotation -= playerRotationAmount
+            if x[self.buttons['left']]:
+                self.rotation += playerRotationAmount
+            self.anglePosChange(True, False)
 
-        # Change XY values based on UD values
-        if x[self.buttons['up']]:
-            # self.Y_c -= playerMovementAmount
-            self.anglePosChange(True)
-            # move = True
-            # actuallyMove = True
-            # rotate = True
-        if x[self.buttons['down']]:
-            # self.Y_c += playerMovementAmount
-            self.anglePosChange(False)
-            # move = False
-            # actuallyMove = True
-            # rotate = True
+            # Change XY values based on UD values
+            if x[self.buttons['up']]:
+                self.anglePosChange(True)
+            if x[self.buttons['down']]:
+                self.anglePosChange(False)
 
-        if self.rotation >= 360:
-            self.rotation -= 360
-        elif self.rotation < 0:
-            self.rotation += 360
+            if self.rotation >= 360:
+                self.rotation -= 360
+            elif self.rotation < 0:
+                self.rotation += 360
 
-        if self.parent.frame > self.lastShot + bulletFrameTimeout:
-            self.lastShot = self.parent.frame
-            if x[self.buttons['fire']]:
-                self.bullet = Bullet(self)
-                self.grace = gracePeriod
+            if self.parent.frame > self.lastShot + bulletFrameTimeout:
+                self.lastShot = self.parent.frame
+                if x[self.buttons['fire']]:
+                    self.bullet = Bullet(self)
+                    self.grace = gracePeriod
+
+        else:
+            r = self.controller.giveAxies()
+            forBa = r[1]
+
+            self.rotation = self.controller.giveRotation()
+            self.anglePosChange(True, False)
+            self.anglePosChange(forBa > 1) if forBa != 0 else None
+
+            if self.parent.frame > self.lastShot + bulletFrameTimeout:
+                self.lastShot = self.parent.frame
+                if self.controller.joystick.get_button(1):
+                    print('asda')
+                    self.bullet = Bullet(self)
+                    self.grace = gracePeriod            
+
+
+    def setController(self, controllerNumber):
+        self.controller = Controller(controllerNumber)
 
 
     # Get X/Y change values from an angle

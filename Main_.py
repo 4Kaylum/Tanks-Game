@@ -12,6 +12,7 @@ if __name__ == '__main__':
     window = Window()
     window.windowState = {'title':0,'playing':1,'pause':2,'settings':3,'makelevel':4}['title']
     window.playerOne.readSettings(currentDirectory + '\\Data\\settings.json')
+    window.playerOne.setController(1)
     window.playerTwo.buttons = {'up':pygame.K_w,'left':pygame.K_a,'down':pygame.K_s,'right':pygame.K_d,'fire':pygame.K_f}
 
     # Run the game while the quit button hasn't been pressed

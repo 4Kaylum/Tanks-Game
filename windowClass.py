@@ -16,6 +16,7 @@ class Window:
     def __init__(self, *, dimensions=[1152, 647], title="Blank"):
         # Init the Pygame module
         pygame.init()
+        pygame.joystick.init()
 
 
         self.clock = pygame.time.Clock()
