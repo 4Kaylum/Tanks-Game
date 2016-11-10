@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
 
         # Create it as an object - just debug as red for now
         self.imageOriginal = pygame.Surface([playerSize, playerSize])
-        # self.imageOriginal = pygame.image.load(currentDirectory + '\\Data\\PlayerOne.png')
+        self.imageOriginal = pygame.image.load(currentDirectory + '\\Data\\rectOne.png')
         self.rectOriginal = self.imageOriginal.get_rect()
         self.image = self.imageOriginal
         self.rect = self.rectOriginal
@@ -144,14 +144,21 @@ class Player(pygame.sprite.Sprite):
 
     def rotCentre(self):
 
-        self.image.fill(playerColour[self.playerNumber-1])
+        # self.image.fill(playerColour[self.playerNumber-1])
 
-        return # Uncomment to turn off image rotation
+        # return # Uncomment to turn off image rotation
 
         rot_image = pygame.transform.rotate(self.imageOriginal, self.rotation)
-        rot_rect = rot_image.get_rect(center=self.rect.center)
+        rot_image.get_rect().center = self.rect.center
         self.image = rot_image
-        self.rect = rot_rect
+        # self.rect = rot_rect
+
+        orig_rect = self.imageOriginal.get_rect()
+        rot_image = pygame.transform.rotate(self.imageOriginal, self.rotation)
+        rot_rect = orig_rect.copy()
+        rot_rect.center = rot_image.get_rect().center
+        rot_image = rot_image.subsurface(rot_rect).copy()
+        self.image = rot_image
         
         # self.image.fill([255, 0, 0]) # Uncomment this to fill image hitbox
 

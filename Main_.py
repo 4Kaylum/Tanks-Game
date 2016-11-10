@@ -39,6 +39,5 @@ if __name__ == '__main__':
             windowStates.titleScreen(window)
 
 
-
     # Out of the loop; kill the program
     pygame.quit()
