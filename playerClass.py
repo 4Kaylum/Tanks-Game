@@ -52,7 +52,7 @@ class Player(pygame.sprite.Sprite):
 
     # Make print(player) mean something
     def __str__(self):
-        return '[P{0} [{1[0]}, {1[0]}] {2}]'.format(self.playerNumber, self.rect.center, self.rotation)
+        return '[P{0} [{1[0]}, {1[1]}] {2}]'.format(self.playerNumber, self.rect.center, self.rotation)
 
 
     # Set a player's location depending on the map
