@@ -1,5 +1,6 @@
 # Import the main library to use for the game
 import pygame
+import math
 
 class Controller:
 
@@ -11,47 +12,54 @@ class Controller:
         self.joystick.init()
 
     def giveAxies(self):
-        deadzone = 10
+        deadzoneTrig = 1
+        deadzoneAxis = 0
         a = int(self.joystick.get_axis(0) * 100)
-        a = a if abs(a) > deadzone else 0
-        b = int(self.joystick.get_axis(1) * -100)
-        b = b if abs(b) > deadzone else 0
+        a = a if abs(a) > deadzoneAxis else 0
+        b = int(self.joystick.get_axis(1) * 100)
+        b = b if abs(b) > deadzoneAxis else 0
         c = int(self.joystick.get_axis(2) * 100)
-        c = c if abs(c) > deadzone else 0
+        c = c if abs(c) > deadzoneTrig else 0
         return [a, b], c
 
     def giveRotation(self):
-        deadzone = 10
+        deadzone = 0
         a = int(self.joystick.get_axis(0) * 100)
         xAx = a if abs(a) > deadzone else 0
-        b = int(self.joystick.get_axis(1) * -100)
+        b = int(self.joystick.get_axis(1) * 100)
         yAx = b if abs(b) > deadzone else 0
 
         try:
-            a = int(math.degrees(math.atan(xAx/yAx)))
-            # print(xAx, yAx)
-        except:
-            a = 0
+            r = abs(int(math.degrees(math.atan(xAx/yAx))))
+            print (r)
+        except ZeroDivisionError:
+            r = -1
+        print(yAx)
 
-        if xAx >= 0 and yAx < 0:
-            a = 90 - (90 + a)
-        elif xAx >= 0 and yAx > 0:
-            a = 90 + (90 - a)
-        elif xAx <= 0 and yAx > 0:
-            a = 180 - a
-        elif xAx <= 0 and yAx < 0:
-            a = 270 + (90 - a)
+        if xAx < 0 and yAx < 0: # top left
+            r = r 
+        elif xAx < 0 and yAx > 0: # bottom left
+            r = 180 - r 
+        elif xAx > 0 and yAx > 0: # bottom right
+            r = 180 + r 
+        elif xAx > 0 and yAx < 0: # top right
+            r = 360 - r
 
-        if xAx == 0 and yAx < 0:
-            a = 0
-        elif xAx == 0 and yAx > 0:
-            a = 180
-        elif xAx > 0 and yAx == 0:
-            a = 90
-        elif xAx < 0 and yAx == 0:
-            a = 270
+        if r == -1:
+            r = 90 if xAx < 0 else r
+            r = 180 if yAx < 0 else r
+            r = 270 if xAx > 0 else r
+            r = 180 if yAx > 0 else r
+            r = 0 if [xAx, yAx] == [0, 0] else r
 
-        return -a
+        if r == 0:
+            return 180 if yAx > 0 else 0
+
+        return r
+
+    def giveRotationalMovement(self):
+        pass
+
 
 
 if __name__ == '__main__':

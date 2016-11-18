@@ -106,9 +106,10 @@ class Player(pygame.sprite.Sprite):
             r = self.controller.giveAxies()
             forBa = r[1]
 
-            self.rotation = self.controller.giveRotation()
-            self.anglePosChange(True, False)
-            self.anglePosChange(forBa > 1) if forBa != 0 else None
+            if forBa != 0:
+                self.rotation = self.controller.giveRotation() if r[0] != [0, 0] else None
+                self.anglePosChange(True, False) if r[0] != [0, 0] else None
+                self.anglePosChange(forBa < 1)
 
             if self.parent.frame > self.lastShot + bulletFrameTimeout:
                 self.lastShot = self.parent.frame
@@ -162,9 +163,9 @@ class Player(pygame.sprite.Sprite):
 
         # return # Uncomment to turn off image rotation
 
-        rot_image = pygame.transform.rotate(self.imageOriginal, self.rotation)
-        rot_image.get_rect().center = self.rect.center
-        self.image = rot_image
+        # rot_image = pygame.transform.rotate(self.imageOriginal, self.rotation)
+        # rot_rect = rot_image.get_rect(center=self.rect.center)
+        # self.image = rot_image
         # self.rect = rot_rect
 
         orig_rect = self.imageOriginal.get_rect()
